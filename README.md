@@ -11,7 +11,6 @@ and tools**, a public marketing site, rich charts, and **built-in AI features th
 
 ## 📸 Screenshots
 
-![University Management System — public home page](docs/screenshots/home.png)
 
 ![Hero section with Student / Faculty / Admin portal cards](docs/screenshots/home-hero.png)
 
