@@ -1,0 +1,80 @@
+{% extends 'base_dashboard.html' %}
+{% block title %}{{ course.code }} · UMS{% endblock %}
+{% block content %}
+{% with is_admin=user.is_admin_role %}
+<div class="page-head">
+  <h4><i class="fa-solid fa-book me-2 text-primary"></i>{{ course.code }} · {{ course.title }}</h4>
+  <div class="d-flex gap-2 flex-wrap">
+    <span class="breadcrumb-chip">{{ course.credits }} credits · Sem {{ course.semester_no }}</span>
+    {% if is_admin or user.is_superuser %}
+    <a href="{% url 'university:faculty_attendance' course.id %}" class="btn btn-light rounded-pill px-3"><i class="fa-solid fa-calendar-check me-1"></i>Attendance</a>
+    <a href="{% url 'university:faculty_attendance_history' course.id %}" class="btn btn-light rounded-pill px-3"><i class="fa-solid fa-table-list me-1"></i>Register</a>
+    <a href="{% url 'university:course_edit' course.id %}" class="btn btn-outline-secondary rounded-pill px-3"><i class="fa-solid fa-pen me-1"></i>Edit</a>
+    <a href="{% url 'university:course_delete' course.id %}" class="btn btn-outline-danger rounded-pill px-3"><i class="fa-solid fa-trash"></i></a>
+    {% endif %}
+  </div>
+</div>
+<div class="row g-4">
+  <div class="col-lg-4">
+    <div class="card card-ums overflow-hidden">
+      <img src="{{ course.image_url|default:'' }}" style="height:170px;object-fit:cover"
+           onerror="this.src='https://picsum.photos/seed/c{{ course.id }}/600/400'">
+      <div class="card-body">
+        <span class="badge rounded-pill" style="background:{{ course.department.color }}">{{ course.department.name }}</span>
+        <p class="small text-muted mt-2">{{ course.description }}</p>
+        <div class="small"><i class="fa-solid fa-chalkboard-user me-2 text-primary"></i>
+          {% if course.faculty %}{{ course.faculty.user.display_name }}{% else %}Faculty TBA{% endif %}</div>
+      </div>
+    </div>
+    {% if is_admin or user.is_superuser %}
+    <div class="card card-ums mt-4">
+      <div class="card-header"><i class="fa-solid fa-user-plus me-2 text-primary"></i>Enroll Student</div>
+      <div class="card-body">
+        <form method="post" action="{% url 'university:course_enroll' course.id %}" class="d-flex gap-2">
+          {% csrf_token %}
+          <select name="student" class="form-select" required>
+            <option value="">Select a student…</option>
+            {% for s in available_students %}<option value="{{ s.id }}">{{ s.roll_no }} — {{ s.user.display_name }}</option>{% endfor %}
+          </select>
+          <button class="btn btn-primary rounded-3"><i class="fa-solid fa-plus"></i></button>
+        </form>
+      </div>
+    </div>
+    {% endif %}
+  </div>
+  <div class="col-lg-8">
+    <div class="card card-ums mb-4">
+      <div class="card-header d-flex justify-content-between"><span><i class="fa-solid fa-users me-2 text-primary"></i>Roster ({{ roster.count }})</span></div>
+      <div class="table-responsive"><table class="table align-middle mb-0">
+        <thead><tr><th class="ps-3">Student</th><th>Roll No</th><th>Status</th>{% if is_admin or user.is_superuser %}<th></th>{% endif %}</tr></thead>
+        <tbody>{% for e in roster %}<tr>
+          <td class="ps-3"><div class="d-flex align-items-center gap-2"><img src="{{ e.student.user.avatar }}" class="avatar-sm">{{ e.student.user.display_name }}</div></td>
+          <td class="small">{{ e.student.roll_no }}</td><td><span class="status {{ e.status }}">{{ e.get_status_display }}</span></td>
+          {% if is_admin or user.is_superuser %}<td class="text-end pe-3">
+            <form method="post" action="{% url 'university:enrollment_remove' e.id %}" onsubmit="return confirm('Remove this student from the course?')">
+              {% csrf_token %}<button class="btn btn-sm btn-outline-danger"><i class="fa-solid fa-user-minus"></i></button></form></td>{% endif %}
+          </tr>
+        {% empty %}<tr><td colspan="4" class="text-muted p-3">No students enrolled.</td></tr>{% endfor %}</tbody></table></div>
+    </div>
+    <div class="row g-4">
+      <div class="col-md-6"><div class="card card-ums h-100">
+        <div class="card-header d-flex justify-content-between"><span><i class="fa-solid fa-file-lines me-2 text-primary"></i>Assignments</span>
+          {% if is_admin or user.is_superuser %}<a href="{% url 'university:assignment_create' %}" class="small">Add</a>{% endif %}</div>
+        <ul class="list-group list-group-flush">{% for a in assignments %}
+          <li class="list-group-item d-flex justify-content-between"><a href="{% url 'university:assignment_detail' a.id %}">{{ a.title }}</a>
+            <span class="small text-muted">due {{ a.due_date|date:'d M' }}</span></li>
+          {% empty %}<li class="list-group-item text-muted">None</li>{% endfor %}</ul></div></div>
+      <div class="col-md-6"><div class="card card-ums h-100">
+        <div class="card-header d-flex justify-content-between"><span><i class="fa-solid fa-pen-to-square me-2 text-primary"></i>Exams</span>
+          {% if is_admin or user.is_superuser %}<a href="{% url 'university:exam_create' %}?course={{ course.id }}" class="small">Add</a>{% endif %}</div>
+        <ul class="list-group list-group-flush">{% for x in exams %}
+          <li class="list-group-item d-flex justify-content-between align-items-center"><span>{{ x.name }}</span>
+            <span class="d-flex align-items-center gap-2"><span class="small text-muted">{{ x.date|date:'d M' }}</span>
+            {% if is_admin or user.is_superuser %}<a href="{% url 'university:exam_edit' x.id %}" class="small"><i class="fa-solid fa-pen"></i></a>
+            <a href="{% url 'university:exam_delete' x.id %}" class="small text-danger"><i class="fa-solid fa-trash"></i></a>{% endif %}</span></li>
+          {% empty %}<li class="list-group-item text-muted">None</li>{% endfor %}</ul></div></div>
+    </div>
+  </div>
+</div>
+{% endwith %}
+{% endblock %}

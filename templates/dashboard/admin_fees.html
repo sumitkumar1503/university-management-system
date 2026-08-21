@@ -1,0 +1,33 @@
+{% extends 'base_dashboard.html' %}
+{% load humanize %}
+{% block title %}Fees · UMS{% endblock %}
+{% block content %}
+<div class="page-head"><h4><i class="fa-solid fa-sack-dollar me-2 text-primary"></i>Fee Management</h4></div>
+<div class="row g-3 mb-4">
+  <div class="col-md-4"><div class="card stat-tile" style="background:linear-gradient(135deg,#00b894,#20bf6b)">
+    <div class="lbl">Collected</div><div class="val">${{ collected|floatformat:0|intcomma }}</div><i class="fa-solid fa-circle-check ghost"></i></div></div>
+  <div class="col-md-4"><div class="card stat-tile" style="background:linear-gradient(135deg,#6C5CE7,#8f7bff)">
+    <div class="lbl">Billed</div><div class="val">${{ billed|floatformat:0|intcomma }}</div><i class="fa-solid fa-file-invoice ghost"></i></div></div>
+  <div class="col-md-4"><div class="card stat-tile" style="background:linear-gradient(135deg,#e84393,#e6488a)">
+    <div class="lbl">Outstanding</div><div class="val">${{ unpaid|floatformat:0|intcomma }}</div><i class="fa-solid fa-hourglass-half ghost"></i></div></div>
+</div>
+<div class="card card-ums">
+  <div class="table-responsive"><table class="table align-middle mb-0">
+    <thead><tr><th class="ps-4">Student</th><th>Invoice</th><th>Amount</th><th>Paid</th><th>Balance</th><th>Status</th><th>Action</th></tr></thead>
+    <tbody>{% for i in invoices %}<tr>
+      <td class="ps-4"><div class="d-flex align-items-center gap-2"><img src="{{ i.student.user.avatar }}" class="avatar-sm">
+        <div><div class="fw-semibold small">{{ i.student.user.display_name }}</div><small class="text-muted">{{ i.student.roll_no }}</small></div></div></td>
+      <td class="small">{{ i.title }}</td>
+      <td>${{ i.amount|floatformat:0|intcomma }}</td>
+      <td>${{ i.amount_paid|floatformat:0|intcomma }}</td>
+      <td class="fw-semibold">${{ i.balance|floatformat:0|intcomma }}</td>
+      <td><span class="status {{ i.status }}">{{ i.status }}</span></td>
+      <td>{% if i.balance > 0 %}
+        <form method="post" action="{% url 'university:record_payment' i.id %}" class="d-flex gap-1">
+          {% csrf_token %}
+          <input name="amount" type="number" class="form-control form-control-sm" style="width:90px" placeholder="Amount">
+          <button class="btn btn-sm btn-primary rounded-pill">Pay</button></form>
+        {% else %}<span class="text-success small"><i class="fa-solid fa-check"></i> Cleared</span>{% endif %}</td>
+    </tr>{% empty %}<tr><td colspan="7" class="text-muted p-3 text-center">No invoices.</td></tr>{% endfor %}</tbody></table></div>
+</div>
+{% endblock %}

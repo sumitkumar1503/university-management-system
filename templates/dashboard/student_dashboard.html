@@ -1,0 +1,78 @@
+{% extends 'base_dashboard.html' %}
+{% block title %}Student Dashboard · UMS{% endblock %}
+{% block content %}
+<div class="page-head">
+  <div><h4>Student Dashboard</h4><small class="text-muted">{{ student.roll_no }} · {{ student.program }}</small></div>
+  <div class="breadcrumb-chip"><i class="fa-solid fa-house me-1"></i> Home <i class="fa-solid fa-angle-right mx-1"></i> Dashboard</div>
+</div>
+
+{% include 'dashboard/_cards.html' %}
+
+<div class="row g-4">
+  <div class="col-lg-7">
+    <div class="card card-ums h-100">
+      <div class="card-header"><i class="fa-solid fa-chart-area me-2" style="color:var(--primary)"></i>Attendance Trend</div>
+      <div class="card-body"><canvas id="trend" height="130"></canvas></div>
+    </div>
+  </div>
+  <div class="col-lg-5">
+    <!-- AI Prediction card -->
+    <div class="card card-ums h-100">
+      <div class="card-header"><i class="fa-solid fa-wand-magic-sparkles me-2" style="color:var(--primary)"></i>AI Performance Predictor</div>
+      <div class="card-body text-center">
+        <div class="position-relative d-inline-block my-2">
+          <canvas id="gauge" width="180" height="180"></canvas>
+          <div class="position-absolute top-50 start-50 translate-middle">
+            <div class="fw-bold" style="font-size:1.8rem">{{ prediction.projected }}</div>
+            <div class="small text-muted">projected</div>
+          </div>
+        </div>
+        <div class="alert alert-{{ prediction.tone }} py-2 small mb-2">
+          <i class="fa-solid {{ prediction.icon }} me-1"></i>{{ prediction.band }}</div>
+        <a href="{% url 'university:ai_insights' %}" class="btn btn-sm btn-primary rounded-pill">See full insights</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row g-4 mt-1">
+  <div class="col-lg-7">
+    <div class="card card-ums h-100">
+      <div class="card-header"><i class="fa-solid fa-chart-simple me-2" style="color:var(--primary)"></i>Marks by Subject</div>
+      <div class="card-body"><canvas id="marks" height="130"></canvas></div>
+    </div>
+  </div>
+  <div class="col-lg-5">
+    <div class="card card-ums h-100">
+      <div class="card-header"><i class="fa-solid fa-calendar-star me-2" style="color:var(--primary)"></i>Upcoming Events</div>
+      <div class="card-body">
+        {% for e in upcoming_events %}
+        <div class="d-flex gap-3 mb-3">
+          <span class="icon-circle" style="background:var(--gradient);width:44px;height:44px"><i class="fa-solid {{ e.icon }}"></i></span>
+          <div><div class="fw-semibold small">{{ e.title }}</div>
+            <div class="text-muted" style="font-size:.75rem">{{ e.date|date:'d M Y' }} · {{ e.location }}</div></div>
+        </div>
+        {% empty %}<div class="text-muted small">No upcoming events.</div>{% endfor %}
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+new Chart(trend, {type:'line', data:{labels:{{ trend_labels|safe }},
+  datasets:[{label:'Attendance %', data:{{ trend_values|safe }}, borderColor:'#0984e3',
+  backgroundColor:'rgba(9,132,227,.15)', fill:true, tension:.4}]},
+  options:{plugins:{legend:{display:false}},scales:{y:{max:100,grid:{color:'#eef0f6'}},x:{grid:{display:false}}}}});
+
+new Chart(marks, {type:'bar', data:{labels:{{ subj_labels|safe }},
+  datasets:[{label:'Score %', data:{{ subj_values|safe }}, backgroundColor:'#6C5CE7', borderRadius:6}]},
+  options:{plugins:{legend:{display:false}},scales:{y:{max:100,grid:{color:'#eef0f6'}},x:{grid:{display:false}}}}});
+
+const p = {{ prediction.projected }};
+new Chart(gauge, {type:'doughnut', data:{datasets:[{data:[p,100-p],
+  backgroundColor:['#0984e3','#eef0f6'], borderWidth:0}]},
+  options:{cutout:'78%',plugins:{legend:{display:false},tooltip:{enabled:false}}}});
+</script>
+{% endblock %}

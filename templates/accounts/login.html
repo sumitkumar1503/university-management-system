@@ -1,0 +1,47 @@
+{% extends 'base_public.html' %}
+{% block title %}Login · UMS{% endblock %}
+{% block content %}
+<div class="container py-5">
+  <div class="row justify-content-center">
+    <div class="col-lg-10">
+      <div class="card card-ums overflow-hidden">
+        <div class="row g-0">
+          <div class="col-md-6 d-none d-md-flex flex-column justify-content-center text-white p-5"
+               style="background:var(--gradient)">
+            <h2 class="fw-bold">Welcome back 👋</h2>
+            <p class="opacity-75">Sign in to your role-based portal — Admin, Faculty or Student.
+              Every portal has its own theme, tools and AI insights.</p>
+            <div class="d-flex gap-3 mt-3">
+              <div><i class="fa-solid fa-user-shield fa-2x"></i><div class="small mt-1">Admin</div></div>
+              <div><i class="fa-solid fa-chalkboard-user fa-2x"></i><div class="small mt-1">Faculty</div></div>
+              <div><i class="fa-solid fa-user-graduate fa-2x"></i><div class="small mt-1">Student</div></div>
+            </div>
+          </div>
+          <div class="col-md-6 p-4 p-md-5">
+            <h4 class="fw-bold mb-1">Sign in</h4>
+            <p class="text-muted small">Enter your credentials to continue.</p>
+            {% if form.errors %}
+              <div class="alert alert-danger py-2 small">Invalid username or password.</div>
+            {% endif %}
+            <form method="post">
+              {% csrf_token %}
+              <div class="mb-3">{{ form.username }}</div>
+              <div class="mb-3">{{ form.password }}</div>
+              <button class="btn btn-primary btn-lg w-100 rounded-3">
+                <i class="fa-solid fa-right-to-bracket me-2"></i>Login</button>
+            </form>
+            <p class="text-center mt-3 mb-0 small">New here?
+              <a href="{% url 'accounts:signup' %}" class="text-primary fw-semibold">Create an account</a></p>
+            <div class="alert alert-light border mt-4 small mb-0">
+              <b>Demo logins</b> (password <code>demo1234</code>):<br>
+              <i class="fa-solid fa-user-shield text-primary"></i> admin ·
+              <i class="fa-solid fa-chalkboard-user text-success"></i> prof.rao ·
+              <i class="fa-solid fa-user-graduate text-info"></i> stu.aarav
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

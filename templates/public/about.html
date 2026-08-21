@@ -1,0 +1,50 @@
+{% extends 'base_public.html' %}
+{% block title %}About Us · UMS{% endblock %}
+{% block content %}
+<section class="hero position-relative py-5">
+  <div class="container position-relative">
+    <div class="row align-items-center g-5">
+      <div class="col-lg-6">
+        <span class="badge-soft badge rounded-pill px-3 py-2 mb-2">About Us</span>
+        <h1 class="fw-bold">Empowering education with <span class="highlight">smart technology</span></h1>
+        <p class="text-muted fs-5">University Management System (UMS) is a modern, all-in-one campus
+          platform. We bring administration, teaching and learning together with a clean, responsive
+          interface and built-in AI insights — no expensive licenses, no clutter.</p>
+      </div>
+      <div class="col-lg-6 text-center">
+        <img src="https://images.unsplash.com/photo-1541339907198-e08756dedf3f?auto=format&fit=crop&w=900&q=70"
+             class="img-fluid rounded-4 shadow-lg" style="border:6px solid #fff"
+             onerror="this.src='https://picsum.photos/seed/about/900/600'" alt="University">
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="container py-5">
+  <div class="row g-4 text-center">
+    <div class="col-md-3"><div class="card card-ums p-4 h-100"><i class="fa-solid fa-bullseye fa-2x text-primary mb-2"></i>
+      <h6 class="fw-bold">Our Mission</h6><p class="small text-muted mb-0">Make campus operations effortless and data-driven.</p></div></div>
+    <div class="col-md-3"><div class="card card-ums p-4 h-100"><i class="fa-solid fa-eye fa-2x text-primary mb-2"></i>
+      <h6 class="fw-bold">Our Vision</h6><p class="small text-muted mb-0">A connected campus where every decision is informed.</p></div></div>
+    <div class="col-md-3"><div class="card card-ums p-4 h-100"><i class="fa-solid fa-heart fa-2x text-primary mb-2"></i>
+      <h6 class="fw-bold">Our Values</h6><p class="small text-muted mb-0">Simplicity, privacy and inclusivity for all.</p></div></div>
+    <div class="col-md-3"><div class="card card-ums p-4 h-100"><i class="fa-solid fa-robot fa-2x text-primary mb-2"></i>
+      <h6 class="fw-bold">AI First</h6><p class="small text-muted mb-0">Predictions and insights built right in — no API keys.</p></div></div>
+  </div>
+</section>
+
+<section class="container py-5">
+  <h2 class="fw-bold text-center mb-5">Our Departments</h2>
+  <div class="row g-4">
+    {% for d in departments %}
+    <div class="col-md-6 col-lg-4">
+      <div class="card card-ums h-100 p-4 d-flex flex-row align-items-center gap-3">
+        <span class="icon-circle" style="background:{{ d.color }}"><i class="fa-solid {{ d.icon }}"></i></span>
+        <div><h6 class="fw-bold mb-1">{{ d.name }}</h6>
+          <p class="small text-muted mb-0">{{ d.description|truncatewords:12 }}</p></div>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+</section>
+{% endblock %}

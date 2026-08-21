@@ -1,0 +1,31 @@
+{% extends 'base_dashboard.html' %}
+{% block title %}Faculty · UMS{% endblock %}
+{% block content %}
+<div class="page-head">
+  <h4><i class="fa-solid fa-chalkboard-user me-2 text-primary"></i>Faculty</h4>
+  <a href="{% url 'university:faculty_create' %}" class="btn btn-primary rounded-pill px-3"><i class="fa-solid fa-user-plus me-1"></i>Add Faculty</a>
+</div>
+<div class="row g-4">
+  {% for f in faculty %}
+  <div class="col-md-6 col-lg-4">
+    <div class="card card-ums p-4 h-100">
+      <div class="d-flex align-items-center gap-3">
+        <img src="{{ f.user.avatar }}" class="rounded-circle" width="60" height="60">
+        <div><h6 class="fw-bold mb-0">{{ f.user.display_name }}</h6>
+          <div class="small text-muted">{{ f.designation }}</div>
+          <span class="badge-soft badge rounded-pill mt-1">{{ f.employee_id }}</span></div>
+      </div>
+      <hr class="my-3">
+      <div class="small text-muted mb-1"><i class="fa-solid fa-building-columns me-2 text-primary"></i>{{ f.department|default:"—" }}</div>
+      <div class="small text-muted mb-1"><i class="fa-solid fa-flask me-2 text-primary"></i>{{ f.specialization|default:"General" }}</div>
+      <div class="small text-muted"><i class="fa-solid fa-book me-2 text-primary"></i>{{ f.n_courses }} course(s)</div>
+      <div class="btn-group btn-group-sm mt-3">
+        <a href="{% url 'university:faculty_detail' f.id %}" class="btn btn-outline-primary rounded-start-pill"><i class="fa-solid fa-eye me-1"></i>View</a>
+        <a href="{% url 'university:faculty_edit' f.id %}" class="btn btn-outline-secondary"><i class="fa-solid fa-pen"></i></a>
+        <a href="{% url 'university:faculty_delete' f.id %}" class="btn btn-outline-danger rounded-end-pill"><i class="fa-solid fa-trash"></i></a>
+      </div>
+    </div>
+  </div>
+  {% empty %}<div class="col-12 text-center text-muted p-4">No faculty yet.</div>{% endfor %}
+</div>
+{% endblock %}

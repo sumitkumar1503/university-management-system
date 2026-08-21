@@ -1,0 +1,155 @@
+/* ============================================================
+   PUBLIC SITE THEME  — maroon "campus" look (Univet-inspired)
+   ============================================================ */
+body.public-theme{
+  --maroon:#8a1a34;
+  --maroon-dark:#6d1327;
+  --maroon-2:#a8213f;
+  --navy:#101d2b;
+  --primary:#8a1a34;
+  --primary-dark:#6d1327;
+  --gradient:linear-gradient(135deg,#8a1a34 0%,#b23a54 100%);
+  font-family:'Poppins',system-ui,sans-serif;
+  background:#fff;
+}
+
+/* recolour shared components for public pages */
+.public-theme .btn-primary{background:var(--maroon);border-color:var(--maroon)}
+.public-theme .btn-primary:hover{background:var(--maroon-dark);border-color:var(--maroon-dark)}
+.public-theme .btn-outline-primary{color:var(--maroon);border-color:var(--maroon)}
+.public-theme .btn-outline-primary:hover{background:var(--maroon);color:#fff}
+.public-theme .text-primary{color:var(--maroon)!important}
+.public-theme .badge-soft{background:rgba(138,26,52,.1)!important;color:var(--maroon)!important}
+.public-theme .highlight{color:var(--maroon)}
+.public-theme a{color:var(--maroon)}
+
+/* ---------- TOP BAR ---------- */
+.pub-topbar{
+  background:var(--maroon);
+  color:#fff;font-size:.82rem;padding:.5rem 0;
+}
+.pub-topbar .tb-welcome{font-weight:500;letter-spacing:.2px;padding-left:135px}
+.pub-topbar .tb-links a{
+  color:rgba(255,255,255,.85);text-decoration:none;padding:0 .85rem;
+  border-left:1px solid rgba(255,255,255,.25);font-size:.8rem;
+}
+.pub-topbar .tb-links a:first-child{border-left:0}
+.pub-topbar .tb-links a:hover{color:#fff}
+
+/* ---------- MAIN HEADER / NAV ---------- */
+.pub-header{background:#fff;box-shadow:0 4px 24px rgba(0,0,0,.06);position:relative;z-index:40}
+.pub-header-inner{
+  display:flex;align-items:center;gap:1.5rem;min-height:78px;position:relative;
+}
+
+/* shield / crest logo that hangs down like the template */
+.pub-brand{display:flex;align-items:flex-start;text-decoration:none}
+.pub-shield{
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  width:120px;background:var(--maroon);color:#fff;
+  padding:14px 8px 26px;margin-top:-34px;text-align:center;
+  clip-path:polygon(0 0,100% 0,100% 82%,50% 100%,0 82%);
+  box-shadow:0 10px 24px rgba(138,26,52,.35);
+}
+.pub-shield i{font-size:1.7rem;margin-bottom:4px}
+.pub-shield small{font-size:.6rem;letter-spacing:2px;opacity:.85;line-height:1}
+.pub-shield b{font-size:1.5rem;font-weight:800;letter-spacing:1px;line-height:1.1}
+
+.pub-menu{display:flex;align-items:center;gap:.35rem;margin-left:.5rem}
+.pub-menu a{
+  color:#1c2733;text-decoration:none;font-weight:600;font-size:.92rem;
+  padding:.55rem .85rem;border-radius:8px;transition:.2s;
+}
+.pub-menu a:hover,.pub-menu a.active{color:var(--maroon);background:rgba(138,26,52,.07)}
+
+.pub-actions{display:flex;align-items:center;gap:.6rem;margin-left:auto}
+.pub-icon-btn{
+  width:40px;height:40px;border-radius:50%;border:1px solid #e6e6ee;background:#fff;
+  color:#1c2733;display:inline-flex;align-items:center;justify-content:center;cursor:pointer;
+}
+.pub-icon-btn:hover{color:var(--maroon);border-color:var(--maroon)}
+.pub-apply{
+  background:var(--maroon);color:#fff !important;border:0;border-radius:40px;
+  padding:.6rem 1.4rem;font-weight:600;text-decoration:none;white-space:nowrap;
+  display:inline-flex;align-items:center;gap:.5rem;box-shadow:0 8px 20px rgba(138,26,52,.35);
+}
+.pub-apply:hover{background:var(--maroon-dark);color:#fff !important}
+.pub-burger{display:none}
+
+/* ---------- HERO ---------- */
+.pub-hero{
+  position:relative;min-height:620px;display:flex;align-items:center;
+  color:#fff;overflow:hidden;
+  background:
+    linear-gradient(100deg,rgba(16,29,43,.96) 0%,rgba(16,29,43,.85) 32%,rgba(16,29,43,.35) 60%,rgba(16,29,43,0) 78%),
+    url('../img/hero-graduate.png');
+  background-size:cover;background-position:right top;
+}
+.pub-hero::after{
+  content:"";position:absolute;inset:0;
+  background:linear-gradient(180deg,rgba(16,29,43,.2),rgba(16,29,43,.1));
+  pointer-events:none;
+}
+.pub-hero .container{position:relative;z-index:2}
+.pub-hero .welcome{font-style:italic;font-size:1.15rem;color:#f1c40f;margin-bottom:.4rem;font-weight:500}
+.pub-hero h1{font-weight:300;font-size:4.4rem;line-height:1.02;margin:0}
+.pub-hero h1 .bold{font-weight:800;display:inline-flex;align-items:center;gap:.6rem}
+.pub-hero h1 .cap{
+  width:64px;height:64px;border-radius:14px;background:var(--maroon);
+  display:inline-flex;align-items:center;justify-content:center;font-size:1.9rem;
+  box-shadow:0 10px 24px rgba(138,26,52,.5);
+}
+.pub-hero .lead-sub{max-width:520px;margin-top:1.2rem;color:rgba(255,255,255,.85);font-size:1.05rem}
+.pub-hero .hero-btn{
+  margin-top:1.8rem;background:var(--maroon);color:#fff;border:0;border-radius:40px;
+  padding:.85rem 1.8rem;font-weight:600;text-decoration:none;display:inline-flex;align-items:center;gap:.7rem;
+  box-shadow:0 12px 30px rgba(138,26,52,.45);
+}
+.pub-hero .hero-btn:hover{background:var(--maroon-dark);color:#fff}
+
+/* ---------- HERO PORTAL CARDS (overlap) ---------- */
+.pub-cards{position:relative;z-index:6;margin-top:-70px}
+.portal-card{
+  background:#fff;border-radius:14px;padding:1.6rem 1.4rem 3rem;height:100%;
+  box-shadow:0 20px 50px rgba(16,29,43,.14);position:relative;overflow:hidden;
+  transition:.25s;
+}
+.portal-card:hover{transform:translateY(-6px);box-shadow:0 26px 60px rgba(16,29,43,.2)}
+.portal-card .pc-head{display:flex;align-items:center;gap:1rem}
+.portal-card .pc-icon{
+  width:58px;height:58px;color:var(--maroon);font-size:2rem;flex:none;
+  display:flex;align-items:center;justify-content:center;
+}
+.portal-card h5{font-weight:800;margin:0;color:#16212e}
+.portal-card p{color:#6b7684;font-size:.9rem;margin:.8rem 0 0}
+.portal-card .pc-chevron{
+  position:absolute;left:50%;bottom:-22px;transform:translateX(-50%);
+  width:44px;height:44px;border-radius:50%;background:var(--maroon);color:#fff;
+  display:flex;align-items:center;justify-content:center;text-decoration:none;
+  box-shadow:0 10px 20px rgba(138,26,52,.4);border:4px solid #fff;
+}
+.portal-card::before{
+  content:"";position:absolute;left:0;top:0;width:6px;height:0;background:var(--maroon);transition:.3s;
+}
+.portal-card:hover::before{height:100%}
+
+/* ---------- responsive ---------- */
+@media (max-width:991px){
+  .pub-hero h1{font-size:3rem}
+  .pub-topbar .tb-welcome{padding-left:108px;font-size:.72rem}
+  .pub-shield{width:96px;margin-top:-30px}
+  .pub-shield b{font-size:1.2rem}
+  .pub-menu{
+    position:absolute;top:100%;left:0;right:0;background:#fff;flex-direction:column;
+    align-items:stretch;padding:.5rem 1rem;box-shadow:0 20px 30px rgba(0,0,0,.12);
+    display:none;
+  }
+  .pub-menu.open{display:flex}
+  .pub-burger{display:inline-flex}
+  .pub-cards{margin-top:2rem}
+}
+@media (max-width:575px){
+  .pub-hero{min-height:520px;background-position:70% center}
+  .pub-hero h1{font-size:2.4rem}
+  .pub-hero .cap{width:46px;height:46px;font-size:1.4rem}
+}

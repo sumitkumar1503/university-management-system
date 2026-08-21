@@ -1,0 +1,52 @@
+{% extends 'base_dashboard.html' %}
+{% block title %}Register · {{ course.code }}{% endblock %}
+{% block content %}
+<div class="page-head">
+  <div><h4><i class="fa-solid fa-table-list me-2" style="color:var(--primary)"></i>Attendance Register</h4>
+    <small class="text-muted">{{ course.code }} · {{ course.title }} · day-wise history</small></div>
+  <div class="d-flex gap-2">
+    <a href="{% url 'university:faculty_attendance' course.id %}" class="btn btn-sm btn-primary rounded-pill"><i class="fa-solid fa-pen me-1"></i>Mark today</a>
+    <a href="{% url 'university:course_detail' course.id %}" class="btn btn-sm btn-outline-primary rounded-pill"><i class="fa-solid fa-arrow-left me-1"></i>Back</a>
+  </div>
+</div>
+
+<div class="d-flex gap-3 mb-3 small">
+  <span><span class="badge bg-success">P</span> Present</span>
+  <span><span class="badge bg-warning text-dark">L</span> Late</span>
+  <span><span class="badge bg-danger">A</span> Absent</span>
+  <span><span class="badge bg-light text-muted border">–</span> Not recorded</span>
+</div>
+
+<div class="card card-ums">
+  <div class="table-responsive"><table class="table table-bordered align-middle mb-0 text-center" style="min-width:640px">
+    <thead class="table-light">
+      <tr>
+        <th class="text-start ps-3" style="position:sticky;left:0;background:#f8f9fb;z-index:2">Student</th>
+        {% for d in dates %}<th class="small" style="white-space:nowrap">{{ d|date:'d M' }}</th>{% endfor %}
+        <th>%</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for row in rows %}
+      <tr>
+        <td class="text-start ps-3" style="position:sticky;left:0;background:#fff;z-index:1">
+          <div class="d-flex align-items-center gap-2"><img src="{{ row.enrollment.student.user.avatar }}" class="avatar-sm">
+            <div><div class="fw-semibold small">{{ row.enrollment.student.user.display_name }}</div>
+              <div class="text-muted" style="font-size:.72rem">{{ row.enrollment.student.roll_no }}</div></div></div>
+        </td>
+        {% for c in row.cells %}
+        <td>
+          {% if c.status == 'P' %}<span class="badge bg-success">P</span>
+          {% elif c.status == 'L' %}<span class="badge bg-warning text-dark">L</span>
+          {% elif c.status == 'A' %}<span class="badge bg-danger">A</span>
+          {% else %}<span class="text-muted">–</span>{% endif %}
+        </td>
+        {% endfor %}
+        <td class="fw-bold {% if row.pct < 75 %}text-danger{% else %}text-success{% endif %}">{{ row.pct }}%</td>
+      </tr>
+      {% empty %}<tr><td colspan="99" class="text-muted p-4">No students enrolled.</td></tr>{% endfor %}
+    </tbody>
+  </table></div>
+</div>
+{% if not dates %}<p class="text-muted small mt-3"><i class="fa-solid fa-circle-info me-1"></i>No attendance recorded yet. Use “Mark today” to start.</p>{% endif %}
+{% endblock %}

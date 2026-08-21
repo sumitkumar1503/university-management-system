@@ -1,0 +1,42 @@
+{% extends 'base_public.html' %}
+{% block title %}Course Catalog · UMS{% endblock %}
+{% block content %}
+<div class="container py-5">
+  <div class="text-center mb-4">
+    <span class="badge-soft badge rounded-pill px-3 py-2">Catalog</span>
+    <h2 class="fw-bold mt-2">Explore our Courses</h2>
+  </div>
+  <form class="row justify-content-center mb-4"><div class="col-lg-6">
+    <div class="input-group input-group-lg">
+      <span class="input-group-text bg-white border-end-0"><i class="fa-solid fa-magnifying-glass text-muted"></i></span>
+      <input name="q" value="{{ q }}" class="form-control border-start-0" placeholder="Search by title or code...">
+      <button class="btn btn-primary px-4">Search</button>
+    </div>
+  </div></form>
+
+  <div class="row g-4">
+    {% for c in courses %}
+    <div class="col-md-6 col-lg-4">
+      <div class="card course-card card-ums h-100 overflow-hidden">
+        <img src="{{ c.image_url|default:'' }}" class="w-100" style="height:170px;object-fit:cover"
+             onerror="this.src='https://picsum.photos/seed/c{{ c.id }}/600/400'" alt="{{ c.title }}">
+        <div class="card-body">
+          <div class="d-flex justify-content-between">
+            <span class="badge rounded-pill" style="background:{{ c.department.color }}">{{ c.department.code }}</span>
+            <span class="small text-muted"><i class="fa-solid fa-star text-warning"></i> {{ c.credits }} cr</span>
+          </div>
+          <h6 class="fw-bold mt-2">{{ c.code }} · {{ c.title }}</h6>
+          <p class="text-muted small">{{ c.description|truncatewords:16 }}</p>
+          <div class="d-flex align-items-center gap-2 small text-muted">
+            <i class="fa-solid fa-chalkboard-user"></i>
+            {% if c.faculty %}{{ c.faculty.user.display_name }}{% else %}Faculty TBA{% endif %}
+          </div>
+        </div>
+      </div>
+    </div>
+    {% empty %}
+      <div class="col-12 text-center text-muted py-5"><i class="fa-solid fa-box-open fa-3x mb-3"></i><p>No courses found.</p></div>
+    {% endfor %}
+  </div>
+</div>
+{% endblock %}

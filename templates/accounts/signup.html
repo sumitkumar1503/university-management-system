@@ -1,0 +1,46 @@
+{% extends 'base_public.html' %}
+{% block title %}Sign Up · UMS{% endblock %}
+{% block content %}
+<div class="container py-5">
+  <div class="row justify-content-center">
+    <div class="col-lg-10">
+      <div class="card card-ums overflow-hidden">
+        <div class="row g-0">
+          <div class="col-md-5 d-none d-md-flex flex-column justify-content-center text-white p-5"
+               style="background:linear-gradient(135deg,#0984e3,#48b1f3)">
+            <h2 class="fw-bold">Join UMS 🎓</h2>
+            <p class="opacity-75">Create your student account to enroll in courses, track attendance,
+              view results and get AI-powered study recommendations.</p>
+            <ul class="list-unstyled small mt-2">
+              <li class="mb-2"><i class="fa-solid fa-circle-check me-2"></i>Personalised dashboard</li>
+              <li class="mb-2"><i class="fa-solid fa-circle-check me-2"></i>Live attendance & grades</li>
+              <li class="mb-2"><i class="fa-solid fa-circle-check me-2"></i>Built-in AI assistant</li>
+            </ul>
+          </div>
+          <div class="col-md-7 p-4 p-md-5">
+            <h4 class="fw-bold mb-3">Create your account</h4>
+            <form method="post">
+              {% csrf_token %}
+              <div class="row g-3">
+                <div class="col-sm-6">{{ form.first_name }}</div>
+                <div class="col-sm-6">{{ form.last_name }}</div>
+                <div class="col-sm-6">{{ form.username }}
+                  {% if form.username.errors %}<div class="text-danger small">{{ form.username.errors.0 }}</div>{% endif %}</div>
+                <div class="col-sm-6">{{ form.email }}</div>
+                <div class="col-12">{{ form.program }}</div>
+                <div class="col-sm-6">{{ form.password1 }}</div>
+                <div class="col-sm-6">{{ form.password2 }}
+                  {% if form.password2.errors %}<div class="text-danger small">{{ form.password2.errors.0 }}</div>{% endif %}</div>
+              </div>
+              <button class="btn btn-primary btn-lg w-100 rounded-3 mt-4">
+                <i class="fa-solid fa-user-plus me-2"></i>Create account</button>
+            </form>
+            <p class="text-center mt-3 mb-0 small">Already registered?
+              <a href="{% url 'accounts:login' %}" class="text-primary fw-semibold">Sign in</a></p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

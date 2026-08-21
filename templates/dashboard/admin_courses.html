@@ -1,0 +1,42 @@
+{% extends 'base_dashboard.html' %}
+{% block title %}Courses · UMS{% endblock %}
+{% block content %}
+<div class="page-head">
+  <h4><i class="fa-solid fa-book me-2 text-primary"></i>Courses</h4>
+  <div class="d-flex gap-2 flex-wrap">
+    <form class="d-flex gap-2"><input name="q" value="{{ q }}" class="form-control rounded-pill" placeholder="Search courses...">
+      <button class="btn btn-light rounded-pill px-3"><i class="fa-solid fa-magnifying-glass"></i></button></form>
+    {% if user.is_admin_role or user.is_superuser %}
+    <a href="{% url 'university:course_create' %}" class="btn btn-primary rounded-pill px-3"><i class="fa-solid fa-plus me-1"></i>Add Course</a>
+    {% endif %}
+  </div>
+</div>
+<div class="row g-4">
+  {% for c in courses %}
+  <div class="col-md-6 col-lg-4">
+    <div class="card course-card card-ums h-100 overflow-hidden">
+      <img src="{{ c.image_url|default:'' }}" style="height:150px;object-fit:cover"
+           onerror="this.src='https://picsum.photos/seed/c{{ c.id }}/600/400'">
+      <div class="card-body">
+        <div class="d-flex justify-content-between">
+          <span class="badge rounded-pill" style="background:{{ c.department.color }}">{{ c.department.code }}</span>
+          <span class="small text-muted">Sem {{ c.semester_no }}</span></div>
+        <h6 class="fw-bold mt-2">{{ c.code }} · {{ c.title }}</h6>
+        <div class="small text-muted mb-2"><i class="fa-solid fa-chalkboard-user me-1"></i>
+          {% if c.faculty %}{{ c.faculty.user.display_name }}{% else %}TBA{% endif %}</div>
+        <div class="d-flex justify-content-between align-items-center">
+          <span class="small"><i class="fa-solid fa-users me-1 text-primary"></i>{{ c.n }} enrolled</span>
+          <div class="btn-group btn-group-sm">
+            <a href="{% url 'university:course_detail' c.id %}" class="btn btn-outline-primary">Details</a>
+            {% if user.is_admin_role or user.is_superuser %}
+            <a href="{% url 'university:course_edit' c.id %}" class="btn btn-outline-secondary"><i class="fa-solid fa-pen"></i></a>
+            <a href="{% url 'university:course_delete' c.id %}" class="btn btn-outline-danger"><i class="fa-solid fa-trash"></i></a>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  {% empty %}<div class="col-12 text-center text-muted p-4">No courses found.</div>{% endfor %}
+</div>
+{% endblock %}

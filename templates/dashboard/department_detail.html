@@ -1,0 +1,27 @@
+{% extends 'base_dashboard.html' %}
+{% block title %}{{ dept.name }} · UMS{% endblock %}
+{% block content %}
+<div class="page-head">
+  <h4><i class="fa-solid {{ dept.icon }} me-2 text-primary"></i>{{ dept.name }}</h4>
+  <span class="breadcrumb-chip">{{ dept.code }}</span>
+</div>
+<div class="card card-ums mb-4"><div class="card-body">
+  <p class="text-muted mb-0">{{ dept.description }}</p></div></div>
+<div class="row g-4">
+  <div class="col-lg-6"><div class="card card-ums h-100">
+    <div class="card-header"><i class="fa-solid fa-graduation-cap me-2 text-primary"></i>Programs</div>
+    <ul class="list-group list-group-flush">
+      {% for p in programs %}<li class="list-group-item d-flex justify-content-between">
+        <span>{{ p.name }}</span><span class="badge-soft badge rounded-pill">{{ p.get_level_display }}</span></li>
+      {% empty %}<li class="list-group-item text-muted">No programs.</li>{% endfor %}
+    </ul></div></div>
+  <div class="col-lg-6"><div class="card card-ums h-100">
+    <div class="card-header"><i class="fa-solid fa-book me-2 text-primary"></i>Courses</div>
+    <ul class="list-group list-group-flush">
+      {% for c in courses %}<li class="list-group-item d-flex justify-content-between">
+        <a href="{% url 'university:course_detail' c.id %}">{{ c.code }} · {{ c.title }}</a>
+        <span class="text-muted small">{{ c.credits }} cr</span></li>
+      {% empty %}<li class="list-group-item text-muted">No courses.</li>{% endfor %}
+    </ul></div></div>
+</div>
+{% endblock %}

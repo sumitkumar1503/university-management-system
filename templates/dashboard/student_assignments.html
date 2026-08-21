@@ -1,0 +1,40 @@
+{% extends 'base_dashboard.html' %}
+{% block title %}Assignments · UMS{% endblock %}
+{% block content %}
+<div class="page-head"><h4><i class="fa-solid fa-list-check me-2" style="color:var(--primary)"></i>Assignments</h4></div>
+<div class="row g-4">
+  {% for d in data %}
+  <div class="col-md-6 col-lg-4">
+    <div class="card card-ums h-100">
+      <div class="card-body">
+        <div class="d-flex justify-content-between">
+          <span class="badge-soft badge rounded-pill">{{ d.assignment.course.code }}</span>
+          {% if d.submission and d.submission.status != 'PENDING' %}
+            <span class="status {{ d.submission.status }}">{{ d.submission.get_status_display }}</span>
+          {% elif d.assignment.is_open %}<span class="status PENDING">Open</span>
+          {% else %}<span class="status ABSENT">Closed</span>{% endif %}
+        </div>
+        <h6 class="fw-bold mt-2"><a href="{% url 'university:assignment_detail' d.assignment.id %}" class="text-decoration-none text-dark">{{ d.assignment.title }}</a></h6>
+        <p class="small text-muted">{{ d.assignment.description|truncatewords:16 }}</p>
+        <div class="small text-muted mb-2"><i class="fa-solid fa-clock me-1"></i>Due {{ d.assignment.due_date|date:'d M Y' }}
+          · Max {{ d.assignment.max_marks }}</div>
+        {% if d.submission and d.submission.status == 'GRADED' %}
+          <div class="alert alert-success py-2 small mb-0"><i class="fa-solid fa-star me-1"></i>
+            Scored {{ d.submission.marks }}/{{ d.assignment.max_marks }}. {{ d.submission.feedback }}</div>
+        {% else %}
+          <button class="btn btn-sm btn-primary rounded-pill" data-bs-toggle="collapse" data-bs-target="#sub{{ d.assignment.id }}">
+            <i class="fa-solid fa-upload me-1"></i>{% if d.submission %}Resubmit{% else %}Submit{% endif %}</button>
+          <div class="collapse mt-2" id="sub{{ d.assignment.id }}">
+            <form method="post" action="{% url 'university:submit_assignment' d.assignment.id %}">
+              {% csrf_token %}
+              <textarea name="content" class="form-control form-control-sm mb-2" rows="3" placeholder="Type your answer / link...">{{ d.submission.content|default:'' }}</textarea>
+              <button class="btn btn-sm btn-success rounded-pill w-100">Confirm submission</button>
+            </form>
+          </div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+  {% empty %}<div class="col-12 text-center text-muted p-4">No assignments yet.</div>{% endfor %}
+</div>
+{% endblock %}

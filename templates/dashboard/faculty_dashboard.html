@@ -1,0 +1,68 @@
+{% extends 'base_dashboard.html' %}
+{% block title %}Faculty Dashboard · UMS{% endblock %}
+{% block content %}
+<div class="page-head">
+  <div><h4>Faculty Dashboard</h4><small class="text-muted">{{ faculty.designation }} · {{ faculty.department }}</small></div>
+  <div class="breadcrumb-chip"><i class="fa-solid fa-house me-1"></i> Home <i class="fa-solid fa-angle-right mx-1"></i> Dashboard</div>
+</div>
+
+{% include 'dashboard/_cards.html' %}
+
+<div class="row g-4">
+  <div class="col-lg-7">
+    <div class="card card-ums h-100">
+      <div class="card-header"><i class="fa-solid fa-chart-column me-2" style="color:var(--primary)"></i>Attendance by Course (%)</div>
+      <div class="card-body"><canvas id="attCourse" height="140"></canvas></div>
+    </div>
+  </div>
+  <div class="col-lg-5">
+    <div class="card card-ums h-100">
+      <div class="card-header"><i class="fa-solid fa-chart-simple me-2" style="color:var(--primary)"></i>Grade Distribution</div>
+      <div class="card-body"><canvas id="grades" height="160"></canvas></div>
+    </div>
+  </div>
+</div>
+
+<div class="row g-4 mt-1">
+  <div class="col-lg-6">
+    <div class="card card-ums h-100">
+      <div class="card-header"><i class="fa-solid fa-book-open me-2" style="color:var(--primary)"></i>My Courses</div>
+      <div class="table-responsive"><table class="table align-middle mb-0">
+        <thead><tr><th class="ps-3">Course</th><th>Students</th><th>Action</th></tr></thead>
+        <tbody>
+        {% for c in courses %}
+          <tr><td class="ps-3"><div class="fw-semibold">{{ c.code }}</div><small class="text-muted">{{ c.title }}</small></td>
+            <td>{{ c.enrolled_count }}</td>
+            <td><a href="{% url 'university:faculty_attendance' c.id %}" class="btn btn-sm btn-primary rounded-pill"><i class="fa-solid fa-calendar-check me-1"></i>Attendance</a></td></tr>
+        {% empty %}<tr><td colspan="3" class="text-muted p-3">No courses assigned.</td></tr>{% endfor %}
+        </tbody></table></div>
+    </div>
+  </div>
+  <div class="col-lg-6">
+    <div class="card card-ums h-100">
+      <div class="card-header"><i class="fa-solid fa-inbox me-2" style="color:var(--primary)"></i>Recent Submissions</div>
+      <div class="list-group list-group-flush">
+        {% for s in recent_submissions %}
+        <div class="list-group-item border-0 d-flex align-items-center gap-3">
+          <img src="{{ s.student.user.avatar }}" class="avatar-sm">
+          <div class="flex-fill"><div class="fw-semibold small">{{ s.student.user.display_name }}</div>
+            <small class="text-muted">{{ s.assignment.title|truncatechars:30 }}</small></div>
+          <span class="status {{ s.status }}">{{ s.get_status_display }}</span>
+        </div>
+        {% empty %}<div class="p-3 text-muted small">No submissions yet.</div>{% endfor %}
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+new Chart(attCourse, {type:'bar', data:{labels:{{ course_labels|safe }},
+  datasets:[{label:'Attendance %', data:{{ course_att|safe }}, backgroundColor:'#009688', borderRadius:6}]},
+  options:{plugins:{legend:{display:false}},scales:{y:{max:100,grid:{color:'#eef0f6'}},x:{grid:{display:false}}}}});
+new Chart(grades, {type:'polarArea', data:{labels:{{ grade_labels|safe }},
+  datasets:[{data:{{ grade_values|safe }}, backgroundColor:['#00b894','#20c997','#4dabf7','#6C5CE7','#f0932b','#e17055','#e84393']}]},
+  options:{plugins:{legend:{position:'right',labels:{boxWidth:12,font:{size:10}}}}}});
+</script>
+{% endblock %}

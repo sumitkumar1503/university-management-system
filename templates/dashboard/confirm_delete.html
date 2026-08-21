@@ -1,0 +1,25 @@
+{% extends 'base_dashboard.html' %}
+{% block title %}Delete {{ label }} · UMS{% endblock %}
+{% block content %}
+<div class="page-head">
+  <h4><i class="fa-solid fa-triangle-exclamation me-2 text-danger"></i>Delete {{ label }}</h4>
+</div>
+<div class="row justify-content-center">
+  <div class="col-lg-6">
+    <div class="card card-ums">
+      <div class="card-body p-4 text-center">
+        <div class="mb-3"><i class="fa-solid fa-trash-can fa-3x text-danger"></i></div>
+        <h5 class="fw-bold">Are you sure?</h5>
+        <p class="text-muted">You are about to permanently delete this {{ label }}:</p>
+        <p class="fw-semibold fs-5">{{ object }}</p>
+        <p class="small text-muted">This action cannot be undone and may remove related records.</p>
+        <form method="post" class="d-flex gap-2 justify-content-center mt-4">
+          {% csrf_token %}
+          <button class="btn btn-danger rounded-pill px-4"><i class="fa-solid fa-trash me-1"></i>Yes, delete</button>
+          <a href="{% url back_url %}" class="btn btn-light rounded-pill px-4">Cancel</a>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

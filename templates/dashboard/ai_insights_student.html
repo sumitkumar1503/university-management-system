@@ -1,0 +1,49 @@
+{% extends 'base_dashboard.html' %}
+{% block title %}AI Insights · UMS{% endblock %}
+{% block content %}
+<div class="page-head"><h4><i class="fa-solid fa-wand-magic-sparkles me-2" style="color:var(--primary)"></i>AI Insights</h4></div>
+<div class="row g-4">
+  <div class="col-lg-5">
+    <div class="card card-ums h-100 text-center p-4">
+      <h6 class="fw-bold mb-3">Predicted Term Score</h6>
+      <div class="position-relative d-inline-block mx-auto my-2">
+        <canvas id="gauge" width="200" height="200"></canvas>
+        <div class="position-absolute top-50 start-50 translate-middle">
+          <div class="fw-bold" style="font-size:2.2rem">{{ prediction.projected }}</div>
+          <div class="small text-muted">/ 100</div></div>
+      </div>
+      <div class="alert alert-{{ prediction.tone }} py-2"><i class="fa-solid {{ prediction.icon }} me-1"></i>{{ prediction.band }}</div>
+      <div class="row text-center g-2">
+        <div class="col-4"><div class="fw-bold">{{ prediction.inputs.attendance }}%</div><small class="text-muted">Attendance</small></div>
+        <div class="col-4"><div class="fw-bold">{{ prediction.inputs.avg_marks }}%</div><small class="text-muted">Avg Marks</small></div>
+        <div class="col-4"><div class="fw-bold">{{ prediction.inputs.submission_rate }}%</div><small class="text-muted">Submissions</small></div>
+      </div>
+    </div>
+  </div>
+  <div class="col-lg-7">
+    <div class="card card-ums h-100">
+      <div class="card-header"><i class="fa-solid fa-list-check me-2" style="color:var(--primary)"></i>Why this prediction</div>
+      <div class="card-body">
+        {% for d in prediction.drivers %}<div class="d-flex gap-2 mb-2"><i class="fa-solid fa-angle-right mt-1 text-primary"></i><span>{{ d }}</span></div>{% endfor %}
+      </div>
+      <div class="card-header"><i class="fa-solid fa-lightbulb me-2" style="color:var(--primary)"></i>Personalised recommendations</div>
+      <div class="card-body">
+        {% for r in recommendations %}
+        <div class="d-flex align-items-start gap-3 mb-3">
+          <span class="icon-circle" style="width:42px;height:42px;font-size:1rem;background:{{ r.color }}"><i class="fa-solid {{ r.icon }}"></i></span>
+          <div class="pt-1">{{ r.text }}</div>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+{% block extra_js %}
+<script>
+const p = {{ prediction.projected }};
+new Chart(gauge, {type:'doughnut', data:{datasets:[{data:[p,100-p],
+  backgroundColor:['{{ theme.primary }}','#eef0f6'], borderWidth:0}]},
+  options:{cutout:'80%',plugins:{legend:{display:false},tooltip:{enabled:false}}}});
+</script>
+{% endblock %}

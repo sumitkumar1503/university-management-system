@@ -1,0 +1,21 @@
+<div class="row g-3 mb-4">
+  {% for c in cards %}
+  <div class="col-6 col-xl-3">
+    <div class="card stat-tile" style="background:{{ c.grad }}">
+      <div class="d-flex justify-content-between align-items-start">
+        <div>
+          <div class="val">{{ c.value }}</div>
+          <div class="lbl mt-1">{{ c.label }}</div>
+        </div>
+        <span class="fs-3 opacity-75"><i class="fa-solid {{ c.icon }}"></i></span>
+      </div>
+      {% if c.delta %}
+      <div class="delta mt-2">
+        <i class="fa-solid fa-arrow-{% if c.up %}up{% else %}down{% endif %}"></i> {{ c.delta }}
+      </div>
+      {% endif %}
+      <i class="fa-solid {{ c.icon }} ghost"></i>
+    </div>
+  </div>
+  {% endfor %}
+</div>

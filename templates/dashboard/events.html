@@ -1,0 +1,31 @@
+{% extends 'base_dashboard.html' %}
+{% block title %}Events · UMS{% endblock %}
+{% block content %}
+<div class="page-head">
+  <h4><i class="fa-solid fa-calendar-star me-2 text-primary"></i>Campus Events</h4>
+  {% if can_manage %}<a href="{% url 'university:event_create' %}" class="btn btn-primary rounded-pill px-3"><i class="fa-solid fa-plus me-1"></i>Add Event</a>{% endif %}
+</div>
+<div class="row g-4">
+  {% for e in events %}
+  <div class="col-md-6 col-lg-4">
+    <div class="card course-card card-ums h-100 overflow-hidden">
+      <img src="{{ e.image_url|default:'' }}" style="height:160px;object-fit:cover"
+           onerror="this.src='https://picsum.photos/seed/e{{ e.id }}/600/400'">
+      <div class="card-body">
+        <span class="badge-soft badge rounded-pill">{{ e.category }}</span>
+        <h6 class="fw-bold mt-2"><i class="fa-solid {{ e.icon }} me-1 text-primary"></i>{{ e.title }}</h6>
+        <p class="small text-muted mb-2">{{ e.description|truncatewords:16 }}</p>
+        <div class="small text-muted"><i class="fa-solid fa-calendar-day me-1"></i>{{ e.date|date:'d M Y' }}
+          · <i class="fa-solid fa-location-dot me-1"></i>{{ e.location }}</div>
+        {% if can_manage %}
+        <div class="btn-group btn-group-sm mt-3">
+          <a href="{% url 'university:event_edit' e.id %}" class="btn btn-outline-secondary rounded-start-pill"><i class="fa-solid fa-pen me-1"></i>Edit</a>
+          <a href="{% url 'university:event_delete' e.id %}" class="btn btn-outline-danger rounded-end-pill"><i class="fa-solid fa-trash"></i></a>
+        </div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+  {% empty %}<div class="col-12 text-center text-muted p-4">No events scheduled.</div>{% endfor %}
+</div>
+{% endblock %}

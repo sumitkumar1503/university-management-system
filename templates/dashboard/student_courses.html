@@ -1,0 +1,23 @@
+{% extends 'base_dashboard.html' %}
+{% block title %}My Courses · UMS{% endblock %}
+{% block content %}
+<div class="page-head"><h4><i class="fa-solid fa-book-open me-2" style="color:var(--primary)"></i>My Courses</h4></div>
+<div class="row g-4">
+  {% for e in enrollments %}
+  <div class="col-md-6 col-lg-4">
+    <div class="card course-card card-ums h-100 overflow-hidden">
+      <img src="{{ e.course.image_url|default:'' }}" style="height:150px;object-fit:cover"
+           onerror="this.src='https://picsum.photos/seed/c{{ e.course.id }}/600/400'">
+      <div class="card-body">
+        <span class="badge rounded-pill" style="background:{{ e.course.department.color }}">{{ e.course.department.code }}</span>
+        <h6 class="fw-bold mt-2">{{ e.course.code }} · {{ e.course.title }}</h6>
+        <div class="small text-muted mb-2"><i class="fa-solid fa-chalkboard-user me-1"></i>
+          {% if e.course.faculty %}{{ e.course.faculty.user.display_name }}{% else %}TBA{% endif %}</div>
+        <span class="status {{ e.status }}">{{ e.get_status_display }}</span>
+        <a href="{% url 'university:course_detail' e.course.id %}" class="btn btn-sm btn-outline-primary rounded-pill float-end">Details</a>
+      </div>
+    </div>
+  </div>
+  {% empty %}<div class="col-12 text-center text-muted p-4">You are not enrolled in any course yet.</div>{% endfor %}
+</div>
+{% endblock %}

@@ -1,0 +1,28 @@
+{% extends 'base_dashboard.html' %}
+{% block title %}Assignments · UMS{% endblock %}
+{% block content %}
+<div class="page-head">
+  <h4><i class="fa-solid fa-list-check me-2" style="color:var(--primary)"></i>Assignments</h4>
+  <a href="{% url 'university:assignment_create' %}" class="btn btn-primary rounded-pill px-3"><i class="fa-solid fa-file-circle-plus me-1"></i>New Assignment</a>
+</div>
+<div class="card card-ums">
+  <div class="table-responsive"><table class="table align-middle mb-0">
+    <thead><tr><th class="ps-4">Assignment</th><th>Course</th><th>Due</th><th>Max</th><th>Submissions</th><th class="text-end pe-4">Actions</th></tr></thead>
+    <tbody>{% for a in assignments %}
+      <tr>
+        <td class="ps-4 fw-semibold"><a href="{% url 'university:assignment_detail' a.id %}" class="text-decoration-none">{{ a.title }}</a></td>
+        <td><span class="badge-soft badge rounded-pill">{{ a.course.code }}</span></td>
+        <td class="small {% if a.is_open %}text-success{% else %}text-danger{% endif %}">{{ a.due_date|date:'d M Y' }}</td>
+        <td>{{ a.max_marks }}</td>
+        <td><span class="badge bg-light text-dark border">{{ a.n_sub }}</span></td>
+        <td class="text-end pe-4">
+          <div class="btn-group btn-group-sm">
+            <a href="{% url 'university:faculty_grade' a.id %}" class="btn btn-outline-primary"><i class="fa-solid fa-pen-clip me-1"></i>Grade</a>
+            <a href="{% url 'university:assignment_edit' a.id %}" class="btn btn-outline-secondary"><i class="fa-solid fa-pen"></i></a>
+            <a href="{% url 'university:assignment_delete' a.id %}" class="btn btn-outline-danger"><i class="fa-solid fa-trash"></i></a>
+          </div>
+        </td>
+      </tr>
+    {% empty %}<tr><td colspan="6" class="text-center text-muted p-4">No assignments yet. Create your first one.</td></tr>{% endfor %}</tbody></table></div>
+</div>
+{% endblock %}

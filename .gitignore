@@ -1,0 +1,31 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+env/
+
+# Django
+db.sqlite3
+db.sqlite3-journal
+/media/
+/staticfiles/
+
+# IDE / OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# YouTube thumbnails (not part of the project)
+thumbnails/
+
+# Report / diagram generation helpers and intermediate images
+build_report.py
+report_doc.py
+report/diagrams/
+smoke_test.py
+
+# Keep the generated report and README screenshots tracked:
+#   report/*.docx  and  docs/screenshots/*  are committed intentionally.

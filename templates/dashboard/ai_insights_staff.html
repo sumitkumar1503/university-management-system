@@ -1,0 +1,41 @@
+{% extends 'base_dashboard.html' %}
+{% block title %}AI Insights · UMS{% endblock %}
+{% block content %}
+<div class="page-head"><h4><i class="fa-solid fa-wand-magic-sparkles me-2" style="color:var(--primary)"></i>AI Insights</h4></div>
+<div class="row g-4">
+  <div class="col-lg-8">
+    <div class="card card-ums h-100">
+      <div class="card-header d-flex justify-content-between align-items-center">
+        <span><i class="fa-solid fa-triangle-exclamation me-2 text-danger"></i>At-Risk Students</span>
+        <span class="badge-soft badge rounded-pill">{{ at_risk|length }} flagged</span>
+      </div>
+      <div class="table-responsive"><table class="table align-middle mb-0">
+        <thead><tr><th class="ps-4">Student</th><th>Attendance</th><th>Avg Marks</th><th>Predicted</th></tr></thead>
+        <tbody>{% for r in at_risk %}
+          <tr><td class="ps-4"><div class="d-flex align-items-center gap-2"><img src="{{ r.student.user.avatar }}" class="avatar-sm">
+            <div><div class="fw-semibold small">{{ r.student.user.display_name }}</div><small class="text-muted">{{ r.student.roll_no }}</small></div></div></td>
+            <td>{{ r.attendance }}%</td><td>{{ r.avg_marks }}%</td>
+            <td><span class="badge rounded-pill bg-{{ r.tone }}">{{ r.projected }}</span></td></tr>
+        {% empty %}<tr><td colspan="4" class="text-center text-success p-4"><i class="fa-solid fa-circle-check me-1"></i>No students at risk. 🎉</td></tr>{% endfor %}</tbody></table></div>
+    </div>
+  </div>
+  <div class="col-lg-4">
+    <div class="card card-ums h-100">
+      <div class="card-header"><i class="fa-solid fa-fire me-2" style="color:var(--primary)"></i>Most Popular Courses</div>
+      <div class="card-body">
+        {% for c in top_courses %}
+        <div class="d-flex align-items-center justify-content-between mb-3">
+          <div class="d-flex align-items-center gap-2">
+            <span class="icon-circle" style="width:38px;height:38px;font-size:.9rem;background:{{ c.department.color }}"><i class="fa-solid fa-book"></i></span>
+            <div><div class="fw-semibold small">{{ c.code }}</div><small class="text-muted">{{ c.title|truncatechars:20 }}</small></div>
+          </div>
+          <span class="badge-soft badge rounded-pill">{{ c.enrolled_count }}</span>
+        </div>
+        {% endfor %}
+        <div class="alert alert-info small mb-0 mt-2"><i class="fa-solid fa-circle-info me-1"></i>
+          Insights are computed locally from live data — no external AI API is used.</div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

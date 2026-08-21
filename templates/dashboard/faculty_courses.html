@@ -1,0 +1,34 @@
+{% extends 'base_dashboard.html' %}
+{% block title %}My Courses · UMS{% endblock %}
+{% block content %}
+<div class="page-head">
+  <h4><i class="fa-solid fa-book-open me-2" style="color:var(--primary)"></i>My Courses</h4>
+  <a href="{% url 'university:faculty_assignments' %}" class="btn btn-primary rounded-pill px-3"><i class="fa-solid fa-list-check me-1"></i>Assignments</a>
+</div>
+<div class="row g-4">
+  {% for c in courses %}
+  <div class="col-md-6 col-lg-4">
+    <div class="card card-ums h-100">
+      <div class="p-4 text-white" style="background:var(--gradient)">
+        <div class="d-flex justify-content-between"><i class="fa-solid fa-book fa-2x"></i>
+          <span class="badge bg-light text-dark">{{ c.code }}</span></div>
+        <h6 class="fw-bold mt-3 mb-0">{{ c.title }}</h6>
+      </div>
+      <div class="card-body">
+        <div class="d-flex justify-content-between small text-muted mb-3">
+          <span><i class="fa-solid fa-users me-1"></i>{{ c.n }} students</span>
+          <span><i class="fa-solid fa-star me-1"></i>{{ c.credits }} credits</span></div>
+        <div class="d-flex gap-2">
+          <a href="{% url 'university:faculty_attendance' c.id %}" class="btn btn-sm btn-primary rounded-pill flex-fill"><i class="fa-solid fa-calendar-check me-1"></i>Attendance</a>
+          <a href="{% url 'university:faculty_attendance_history' c.id %}" class="btn btn-sm btn-outline-secondary rounded-pill" title="Day-wise register"><i class="fa-solid fa-table-list"></i></a>
+          <a href="{% url 'university:course_detail' c.id %}" class="btn btn-sm btn-outline-secondary rounded-pill"><i class="fa-solid fa-eye"></i></a>
+        </div>
+        {% for a in c.assignments.all|slice:':2' %}
+          <a href="{% url 'university:faculty_grade' a.id %}" class="d-block small mt-2"><i class="fa-solid fa-pen-clip me-1"></i>Grade: {{ a.title|truncatechars:26 }}</a>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+  {% empty %}<div class="col-12 text-center text-muted p-4">No courses assigned yet.</div>{% endfor %}
+</div>
+{% endblock %}

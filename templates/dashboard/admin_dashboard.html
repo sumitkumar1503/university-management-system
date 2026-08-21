@@ -1,0 +1,123 @@
+{% extends 'base_dashboard.html' %}
+{% load humanize %}
+{% block title %}Admin Dashboard · UMS{% endblock %}
+{% block content %}
+<div class="page-head">
+  <div><h4>University Dashboard</h4><small class="text-muted">Welcome back, {{ user.display_name }}</small></div>
+  <div class="breadcrumb-chip"><i class="fa-solid fa-house me-1"></i> Home <i class="fa-solid fa-angle-right mx-1"></i> Dashboard</div>
+</div>
+
+{% include 'dashboard/_cards.html' %}
+
+<div class="row g-4">
+  <div class="col-lg-7">
+    <div class="card card-ums h-100">
+      <div class="card-header d-flex justify-content-between align-items-center">
+        <span><i class="fa-solid fa-chart-column me-2 text-primary"></i>Monthly Fee Collection</span>
+        <span class="badge-soft badge rounded-pill">This year</span>
+      </div>
+      <div class="card-body"><canvas id="feeChart" height="130"></canvas></div>
+    </div>
+  </div>
+  <div class="col-lg-5">
+    <div class="card card-ums h-100">
+      <div class="card-header"><i class="fa-solid fa-chart-line me-2 text-primary"></i>Student Enrollment Trend</div>
+      <div class="card-body"><canvas id="enrollChart" height="150"></canvas></div>
+    </div>
+  </div>
+</div>
+
+<div class="row g-4 mt-1">
+  <div class="col-lg-4">
+    <div class="card card-ums h-100">
+      <div class="card-header"><i class="fa-solid fa-chart-pie me-2 text-primary"></i>Students by Department</div>
+      <div class="card-body"><canvas id="deptChart" height="200"></canvas></div>
+    </div>
+  </div>
+  <div class="col-lg-4">
+    <div class="card card-ums h-100">
+      <div class="card-header"><i class="fa-solid fa-user-check me-2 text-primary"></i>Attendance Overview</div>
+      <div class="card-body"><canvas id="attChart" height="200"></canvas></div>
+    </div>
+  </div>
+  <div class="col-lg-4">
+    <div class="card card-ums h-100">
+      <div class="card-header d-flex justify-content-between"><span><i class="fa-solid fa-fire me-2 text-primary"></i>Top Courses</span></div>
+      <div class="card-body">
+        {% for c in top_courses %}
+        <div class="d-flex align-items-center justify-content-between mb-3">
+          <div class="d-flex align-items-center gap-2">
+            <span class="icon-circle" style="width:38px;height:38px;font-size:.9rem;background:{{ c.department.color }}"><i class="fa-solid fa-book"></i></span>
+            <div><div class="fw-semibold small">{{ c.code }}</div><div class="text-muted" style="font-size:.72rem">{{ c.title|truncatechars:22 }}</div></div>
+          </div>
+          <span class="badge-soft badge rounded-pill">{{ c.enrolled_count }}</span>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row g-4 mt-1">
+  <div class="col-lg-7">
+    <div class="card card-ums h-100">
+      <div class="card-header"><i class="fa-solid fa-bullhorn me-2 text-primary"></i>Recent Notices</div>
+      <div class="list-group list-group-flush">
+        {% for n in recent_notices %}
+        <div class="list-group-item border-0 px-3">
+          <div class="d-flex justify-content-between">
+            <span class="fw-semibold">{% if n.is_pinned %}<i class="fa-solid fa-thumbtack text-danger me-1"></i>{% endif %}{{ n.title }}</span>
+            <small class="text-muted">{{ n.created_at|naturaltime }}</small>
+          </div>
+          <p class="small text-muted mb-0">{{ n.body|truncatewords:18 }}</p>
+        </div>
+        {% empty %}<div class="p-3 text-muted small">No notices yet.</div>{% endfor %}
+      </div>
+    </div>
+  </div>
+  <div class="col-lg-5">
+    <div class="card card-ums h-100">
+      <div class="card-header"><i class="fa-solid fa-calendar-star me-2 text-primary"></i>Upcoming Events</div>
+      <div class="card-body">
+        {% for e in upcoming_events %}
+        <div class="d-flex gap-3 mb-3">
+          <div class="text-center" style="min-width:52px">
+            <div class="rounded-3 text-white fw-bold py-2" style="background:var(--gradient)">
+              <div style="font-size:1.1rem;line-height:1">{{ e.date|date:'d' }}</div>
+              <div style="font-size:.65rem">{{ e.date|date:'M' }}</div>
+            </div>
+          </div>
+          <div><div class="fw-semibold small">{{ e.title }}</div>
+            <div class="text-muted" style="font-size:.75rem"><i class="fa-solid fa-location-dot me-1"></i>{{ e.location }}</div></div>
+        </div>
+        {% empty %}<div class="text-muted small">No upcoming events.</div>{% endfor %}
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+const months = {{ months|safe }};
+new Chart(feeChart, {type:'bar', data:{labels:months, datasets:[
+  {label:'Collected', data:{{ fee_collected|safe }}, backgroundColor:'#6C5CE7', borderRadius:6},
+  {label:'Pending', data:{{ fee_pending|safe }}, backgroundColor:'#e6e6f5', borderRadius:6}]},
+  options:{plugins:{legend:{position:'bottom'}},scales:{y:{grid:{color:'#f0f0f7'}},x:{grid:{display:false}}}}});
+
+new Chart(enrollChart, {type:'line', data:{labels:months, datasets:[
+  {label:'Total Students', data:{{ enroll_trend|safe }}, borderColor:'#6C5CE7', backgroundColor:'rgba(108,92,231,.15)', fill:true, tension:.4},
+  {label:'New Admissions', data:{{ new_admissions|safe }}, borderColor:'#e84393', tension:.4}]},
+  options:{plugins:{legend:{position:'bottom'}},scales:{y:{grid:{color:'#f0f0f7'}},x:{grid:{display:false}}}}});
+
+new Chart(deptChart, {type:'doughnut', data:{
+  labels:[{% for d in dept_rows %}'{{ d.name }}',{% endfor %}],
+  datasets:[{data:[{% for d in dept_rows %}{{ d.n }},{% endfor %}],
+  backgroundColor:[{% for d in dept_rows %}'{{ d.color }}',{% endfor %}]}]},
+  options:{plugins:{legend:{position:'bottom',labels:{boxWidth:12,font:{size:10}}}},cutout:'62%'}});
+
+new Chart(attChart, {type:'doughnut', data:{labels:['Present','Absent','Late'],
+  datasets:[{data:{{ attendance_split|safe }}, backgroundColor:['#00b894','#e84393','#f0932b']}]},
+  options:{plugins:{legend:{position:'bottom'}},cutout:'62%'}});
+</script>
+{% endblock %}

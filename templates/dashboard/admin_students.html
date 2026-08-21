@@ -1,0 +1,35 @@
+{% extends 'base_dashboard.html' %}
+{% block title %}Students · UMS{% endblock %}
+{% block content %}
+<div class="page-head">
+  <h4><i class="fa-solid fa-user-graduate me-2 text-primary"></i>Students</h4>
+  <div class="d-flex gap-2 flex-wrap">
+    <form class="d-flex gap-2"><input name="q" value="{{ q }}" class="form-control rounded-pill" placeholder="Search students...">
+      <button class="btn btn-light rounded-pill px-3"><i class="fa-solid fa-magnifying-glass"></i></button></form>
+    <a href="{% url 'university:student_create' %}" class="btn btn-primary rounded-pill px-3"><i class="fa-solid fa-user-plus me-1"></i>Add Student</a>
+  </div>
+</div>
+<div class="card card-ums">
+  <div class="table-responsive"><table class="table align-middle mb-0">
+    <thead><tr><th class="ps-4">Student</th><th>Roll No</th><th>Program</th><th>Semester</th><th>Email</th><th class="text-end pe-4">Actions</th></tr></thead>
+    <tbody>
+    {% for s in students %}
+      <tr>
+        <td class="ps-4"><div class="d-flex align-items-center gap-2">
+          <img src="{{ s.user.avatar }}" class="avatar-sm"><span class="fw-semibold">{{ s.user.display_name }}</span></div></td>
+        <td><span class="badge-soft badge rounded-pill">{{ s.roll_no }}</span></td>
+        <td class="small">{{ s.program.code|default:"—" }}</td>
+        <td>Sem {{ s.current_semester }}</td>
+        <td class="small text-muted">{{ s.user.email }}</td>
+        <td class="text-end pe-4">
+          <div class="btn-group btn-group-sm">
+            <a href="{% url 'university:student_detail' s.id %}" class="btn btn-outline-primary" title="View"><i class="fa-solid fa-eye"></i></a>
+            <a href="{% url 'university:student_edit' s.id %}" class="btn btn-outline-secondary" title="Edit"><i class="fa-solid fa-pen"></i></a>
+            <a href="{% url 'university:student_delete' s.id %}" class="btn btn-outline-danger" title="Delete"><i class="fa-solid fa-trash"></i></a>
+          </div>
+        </td>
+      </tr>
+    {% empty %}<tr><td colspan="6" class="text-center text-muted p-4">No students found.</td></tr>{% endfor %}
+    </tbody></table></div>
+</div>
+{% endblock %}

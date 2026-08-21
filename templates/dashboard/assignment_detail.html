@@ -1,0 +1,58 @@
+{% extends 'base_dashboard.html' %}
+{% block title %}{{ assignment.title }} · UMS{% endblock %}
+{% block content %}
+<div class="page-head">
+  <div><h4><i class="fa-solid fa-file-lines me-2" style="color:var(--primary)"></i>{{ assignment.title }}</h4>
+    <small class="text-muted">{{ assignment.course.code }} · {{ assignment.course.title }}</small></div>
+  <span class="breadcrumb-chip">{% if assignment.is_open %}<i class="fa-solid fa-lock-open me-1 text-success"></i>Open{% else %}<i class="fa-solid fa-lock me-1 text-danger"></i>Closed{% endif %}</span>
+</div>
+
+<div class="row g-4">
+  <div class="col-lg-5">
+    <div class="card card-ums">
+      <div class="card-body">
+        <p class="text-muted">{{ assignment.description|default:"No description provided." }}</p>
+        <ul class="list-unstyled small mb-0">
+          <li class="mb-2"><i class="fa-solid fa-calendar-day me-2 text-primary"></i>Assigned: {{ assignment.assigned_on|date:'d M Y' }}</li>
+          <li class="mb-2"><i class="fa-solid fa-clock me-2 text-primary"></i>Due: {{ assignment.due_date|date:'d M Y' }}</li>
+          <li><i class="fa-solid fa-star me-2 text-primary"></i>Max marks: {{ assignment.max_marks }}</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-lg-7">
+    {% if user.is_student %}
+      <div class="card card-ums">
+        <div class="card-header"><i class="fa-solid fa-upload me-2 text-primary"></i>Your Submission</div>
+        <div class="card-body">
+          {% if submission and submission.status == 'GRADED' %}
+            <div class="alert alert-success"><i class="fa-solid fa-award me-1"></i>
+              Scored <strong>{{ submission.marks }}/{{ assignment.max_marks }}</strong>. {{ submission.feedback }}</div>
+          {% endif %}
+          {% if enrolled %}
+          <form method="post" action="{% url 'university:submit_assignment' assignment.id %}">
+            {% csrf_token %}
+            <textarea name="content" class="form-control mb-2" rows="5" placeholder="Type your answer or paste a link...">{{ submission.content|default:'' }}</textarea>
+            <button class="btn btn-primary rounded-pill px-4"><i class="fa-solid fa-paper-plane me-1"></i>{% if submission %}Resubmit{% else %}Submit{% endif %}</button>
+            {% if submission.submitted_on %}<span class="small text-muted ms-2">Last submitted {{ submission.submitted_on|date:'d M Y H:i' }}</span>{% endif %}
+          </form>
+          {% else %}<p class="text-muted mb-0">You are not enrolled in this course.</p>{% endif %}
+        </div>
+      </div>
+    {% else %}
+      <div class="card card-ums">
+        <div class="card-header d-flex justify-content-between"><span><i class="fa-solid fa-inbox me-2 text-primary"></i>Submissions ({{ submissions|length }})</span>
+          <a href="{% url 'university:faculty_grade' assignment.id %}" class="small">Grade all</a></div>
+        <div class="table-responsive"><table class="table align-middle mb-0">
+          <thead><tr><th class="ps-4">Student</th><th>Status</th><th>Marks</th></tr></thead>
+          <tbody>{% for s in submissions %}
+            <tr><td class="ps-4"><div class="d-flex align-items-center gap-2"><img src="{{ s.student.user.avatar }}" class="avatar-sm">{{ s.student.user.display_name }}</div></td>
+              <td><span class="status {{ s.status }}">{{ s.get_status_display }}</span></td>
+              <td>{% if s.marks is not None %}{{ s.marks }}/{{ assignment.max_marks }}{% else %}—{% endif %}</td></tr>
+          {% empty %}<tr><td colspan="3" class="text-muted p-3 text-center">No submissions yet.</td></tr>{% endfor %}</tbody></table></div>
+      </div>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}

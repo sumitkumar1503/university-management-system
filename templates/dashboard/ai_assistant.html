@@ -1,0 +1,42 @@
+{% extends 'base_dashboard.html' %}
+{% block title %}AI Assistant · UMS{% endblock %}
+{% block content %}
+<div class="page-head">
+  <div><h4><i class="fa-solid fa-robot me-2" style="color:var(--primary)"></i>UMS AI Assistant</h4>
+    <small class="text-muted">Ask about attendance, results, fees, courses & campus stats — runs fully offline, no API key.</small></div>
+</div>
+<div class="row g-4">
+  <div class="col-lg-8">
+    <div class="card card-ums">
+      <div class="card-body">
+        <div id="aiMessages" style="height:52vh;overflow-y:auto;padding:6px">
+          <div class="chat-bubble bot"><i class="fa-solid fa-hand-sparkles me-2 text-primary"></i>
+            Hi {{ user.display_name }}! I'm your campus assistant. Try one of these:</div>
+        </div>
+      </div>
+      <div class="card-footer bg-white border-top">
+        <form onsubmit="aiFormSubmit(event,'aiInput','aiMessages')" class="d-flex gap-2">
+          <input id="aiInput" class="form-control form-control-lg rounded-pill" placeholder="Ask me anything...">
+          <button class="btn btn-primary rounded-circle" style="width:52px"><i class="fa-solid fa-paper-plane"></i></button>
+        </form>
+      </div>
+    </div>
+  </div>
+  <div class="col-lg-4">
+    <div class="card card-ums p-4">
+      <h6 class="fw-bold"><i class="fa-solid fa-lightbulb me-2 text-primary"></i>Quick prompts</h6>
+      <div id="startChips" class="mt-2">
+        {% for s in suggestions %}<span class="chip" onclick="aiSend('{{ s }}','aiMessages','aiInput')">{{ s }}</span>{% endfor %}
+      </div>
+      <hr>
+      <div class="small text-muted">
+        <p class="mb-2"><i class="fa-solid fa-shield-halved me-2 text-primary"></i>Answers are generated locally from your live database.</p>
+        <p class="mb-0"><i class="fa-solid fa-bolt me-2 text-primary"></i>No external AI service or key required.</p>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+{% block extra_js %}
+<script>renderChips({{ suggestions|safe }}, 'aiMessages', 'aiInput');</script>
+{% endblock %}

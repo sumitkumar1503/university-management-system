@@ -1,0 +1,36 @@
+{% extends 'base_dashboard.html' %}
+{% block title %}My Attendance · UMS{% endblock %}
+{% block content %}
+<div class="page-head"><h4><i class="fa-solid fa-calendar-check me-2" style="color:var(--primary)"></i>My Attendance</h4></div>
+<div class="card card-ums mb-4">
+  <div class="card-header"><i class="fa-solid fa-chart-simple me-2 text-primary"></i>Course Summary</div>
+  <div class="table-responsive"><table class="table align-middle mb-0">
+    <thead><tr><th class="ps-4">Course</th><th>Classes</th><th>Present</th><th style="width:280px">Attendance</th></tr></thead>
+    <tbody>{% for r in rows %}
+      <tr><td class="ps-4 fw-semibold">{{ r.course.code }} · {{ r.course.title }}</td>
+        <td>{{ r.total }}</td><td>{{ r.present }}</td>
+        <td><div class="d-flex align-items-center gap-2">
+          <div class="progress flex-fill"><div class="progress-bar" role="progressbar"
+            style="width:{{ r.pct }}%;background:{% if r.pct >= 75 %}#00b894{% elif r.pct >= 50 %}#f0932b{% else %}#e84393{% endif %}"></div></div>
+          <span class="fw-semibold small">{{ r.pct }}%</span></div></td></tr>
+    {% empty %}<tr><td colspan="4" class="text-muted p-3 text-center">No attendance records yet.</td></tr>{% endfor %}</tbody></table></div>
+</div>
+
+<div class="card card-ums">
+  <div class="card-header"><i class="fa-solid fa-clock-rotate-left me-2 text-primary"></i>Day-wise Log</div>
+  <div class="table-responsive"><table class="table align-middle mb-0">
+    <thead><tr><th class="ps-4">Date</th><th>Day</th><th>Course</th><th class="text-end pe-4">Status</th></tr></thead>
+    <tbody>{% for a in log %}
+      <tr>
+        <td class="ps-4 fw-semibold">{{ a.date|date:'d M Y' }}</td>
+        <td class="small text-muted">{{ a.date|date:'l' }}</td>
+        <td class="small">{{ a.enrollment.course.code }} · {{ a.enrollment.course.title }}</td>
+        <td class="text-end pe-4">
+          {% if a.status == 'P' %}<span class="badge bg-success"><i class="fa-solid fa-check me-1"></i>Present</span>
+          {% elif a.status == 'L' %}<span class="badge bg-warning text-dark"><i class="fa-solid fa-clock me-1"></i>Late</span>
+          {% else %}<span class="badge bg-danger"><i class="fa-solid fa-xmark me-1"></i>Absent</span>{% endif %}
+        </td>
+      </tr>
+    {% empty %}<tr><td colspan="4" class="text-muted p-3 text-center">No day-wise records yet.</td></tr>{% endfor %}</tbody></table></div>
+</div>
+{% endblock %}

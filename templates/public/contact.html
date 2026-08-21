@@ -1,0 +1,36 @@
+{% extends 'base_public.html' %}
+{% block title %}Contact · UMS{% endblock %}
+{% block content %}
+<div class="container py-5">
+  <div class="text-center mb-5">
+    <span class="badge-soft badge rounded-pill px-3 py-2">Get in touch</span>
+    <h2 class="fw-bold mt-2">We'd love to hear from you</h2>
+  </div>
+  <div class="row g-4">
+    <div class="col-lg-4">
+      <div class="card card-ums p-4 h-100">
+        <div class="d-flex align-items-center gap-3 mb-3"><span class="icon-circle" style="background:var(--gradient)"><i class="fa-solid fa-location-dot"></i></span>
+          <div><div class="fw-bold">Address</div><div class="small text-muted">Knowledge City, Campus Road</div></div></div>
+        <div class="d-flex align-items-center gap-3 mb-3"><span class="icon-circle" style="background:linear-gradient(135deg,#00b894,#20bf6b)"><i class="fa-solid fa-envelope"></i></span>
+          <div><div class="fw-bold">Email</div><div class="small text-muted">hello@example.com</div></div></div>
+        <div class="d-flex align-items-center gap-3"><span class="icon-circle" style="background:linear-gradient(135deg,#e17055,#f0932b)"><i class="fa-solid fa-phone"></i></span>
+          <div><div class="fw-bold">Phone</div><div class="small text-muted">0000</div></div></div>
+      </div>
+    </div>
+    <div class="col-lg-8">
+      <div class="card card-ums p-4">
+        <form method="post">
+          {% csrf_token %}
+          <div class="row g-3">
+            <div class="col-md-6"><input class="form-control form-control-lg" placeholder="Your name" required></div>
+            <div class="col-md-6"><input type="email" class="form-control form-control-lg" placeholder="you@example.com" required></div>
+            <div class="col-12"><input class="form-control form-control-lg" placeholder="Subject"></div>
+            <div class="col-12"><textarea class="form-control form-control-lg" rows="5" placeholder="Your message"></textarea></div>
+          </div>
+          <button class="btn btn-primary btn-lg rounded-3 mt-3"><i class="fa-solid fa-paper-plane me-2"></i>Send message</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

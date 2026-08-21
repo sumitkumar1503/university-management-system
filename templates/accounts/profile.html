@@ -1,0 +1,32 @@
+{% extends 'base_dashboard.html' %}
+{% block title %}My Profile · UMS{% endblock %}
+{% block content %}
+<div class="page-head"><h4><i class="fa-solid fa-id-badge me-2 text-primary"></i>My Profile</h4></div>
+<div class="row g-4">
+  <div class="col-lg-4">
+    <div class="card card-ums text-center p-4">
+      <img src="{{ user.avatar }}" class="rounded-circle mx-auto mb-3" width="110" height="110">
+      <h5 class="fw-bold mb-0">{{ user.display_name }}</h5>
+      <span class="badge-soft badge rounded-pill mt-2">{{ user.get_role_display }}</span>
+      <div class="text-muted small mt-3"><i class="fa-solid fa-envelope me-2"></i>{{ user.email|default:"—" }}</div>
+      <div class="text-muted small"><i class="fa-solid fa-phone me-2"></i>{{ user.phone }}</div>
+    </div>
+  </div>
+  <div class="col-lg-8">
+    <div class="card card-ums p-4">
+      <h6 class="fw-bold mb-3">Account details</h6>
+      <div class="row g-3">
+        <div class="col-sm-6"><small class="text-muted">Username</small><div class="fw-semibold">{{ user.username }}</div></div>
+        <div class="col-sm-6"><small class="text-muted">Role</small><div class="fw-semibold">{{ user.get_role_display }}</div></div>
+        {% if user.is_student %}
+          <div class="col-sm-6"><small class="text-muted">Roll No</small><div class="fw-semibold">{{ user.student_profile.roll_no }}</div></div>
+          <div class="col-sm-6"><small class="text-muted">Program</small><div class="fw-semibold">{{ user.student_profile.program }}</div></div>
+        {% elif user.is_faculty %}
+          <div class="col-sm-6"><small class="text-muted">Employee ID</small><div class="fw-semibold">{{ user.faculty_profile.employee_id }}</div></div>
+          <div class="col-sm-6"><small class="text-muted">Department</small><div class="fw-semibold">{{ user.faculty_profile.department }}</div></div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

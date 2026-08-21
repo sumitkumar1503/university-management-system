@@ -1,0 +1,27 @@
+{% extends 'base_dashboard.html' %}
+{% block title %}{{ faculty.user.display_name }} · UMS{% endblock %}
+{% block content %}
+<div class="page-head">
+  <h4><i class="fa-solid fa-id-card me-2 text-primary"></i>Faculty Profile</h4>
+  <a href="{% url 'university:admin_faculty' %}" class="btn btn-sm btn-outline-primary rounded-pill"><i class="fa-solid fa-arrow-left me-1"></i>Back</a>
+</div>
+<div class="row g-4">
+  <div class="col-lg-4"><div class="card card-ums text-center p-4">
+    <img src="{{ faculty.user.avatar }}" class="rounded-circle mx-auto mb-3" width="100" height="100">
+    <h5 class="fw-bold mb-0">{{ faculty.user.display_name }}</h5>
+    <div class="text-muted small">{{ faculty.designation }}</div>
+    <hr><div class="text-start small">
+      <div class="mb-2"><i class="fa-solid fa-id-badge me-2 text-primary"></i>{{ faculty.employee_id }}</div>
+      <div class="mb-2"><i class="fa-solid fa-building-columns me-2 text-primary"></i>{{ faculty.department }}</div>
+      <div class="mb-2"><i class="fa-solid fa-envelope me-2 text-primary"></i>{{ faculty.user.email }}</div>
+      <div class="mb-2"><i class="fa-solid fa-phone me-2 text-primary"></i>{{ faculty.user.phone }}</div>
+    </div></div></div>
+  <div class="col-lg-8"><div class="card card-ums">
+    <div class="card-header"><i class="fa-solid fa-book me-2 text-primary"></i>Courses Taught</div>
+    <div class="table-responsive"><table class="table align-middle mb-0">
+      <thead><tr><th class="ps-3">Code</th><th>Title</th><th>Students</th></tr></thead>
+      <tbody>{% for c in courses %}<tr><td class="ps-3 fw-semibold">{{ c.code }}</td><td>{{ c.title }}</td><td>{{ c.enrolled_count }}</td></tr>
+      {% empty %}<tr><td colspan="3" class="text-muted p-3">No courses.</td></tr>{% endfor %}</tbody></table></div>
+  </div></div>
+</div>
+{% endblock %}

@@ -1,0 +1,40 @@
+{% extends 'base_dashboard.html' %}
+{% load ums_extras %}
+{% block title %}Attendance · {{ course.code }}{% endblock %}
+{% block content %}
+<div class="page-head">
+  <div><h4><i class="fa-solid fa-calendar-check me-2" style="color:var(--primary)"></i>Mark Attendance</h4>
+    <small class="text-muted">{{ course.code }} · {{ course.title }}</small></div>
+  <div class="d-flex gap-2 align-items-center flex-wrap">
+    <form class="d-flex gap-2 align-items-center" method="get">
+      <input type="date" name="date" value="{{ today|date:'Y-m-d' }}" class="form-control form-control-sm rounded-pill" onchange="this.form.submit()">
+    </form>
+    <a href="{% url 'university:faculty_attendance_history' course.id %}" class="btn btn-sm btn-outline-secondary rounded-pill"><i class="fa-solid fa-table-list me-1"></i>Register</a>
+    <a href="{% url 'university:faculty_courses' %}" class="btn btn-sm btn-outline-primary rounded-pill"><i class="fa-solid fa-arrow-left me-1"></i>Back</a>
+  </div>
+</div>
+<div class="alert alert-info rounded-3 py-2 small"><i class="fa-solid fa-circle-info me-1"></i>Marking attendance for <strong>{{ today|date:'l, d M Y' }}</strong>. Pick another date above to edit past sessions.</div>
+<form method="post"><div class="card card-ums">
+  {% csrf_token %}
+  <input type="hidden" name="date" value="{{ today|date:'Y-m-d' }}">
+  <div class="table-responsive"><table class="table align-middle mb-0">
+    <thead><tr><th class="ps-4">Student</th><th>Roll No</th><th class="text-end pe-4">Status</th></tr></thead>
+    <tbody>{% for e in roster %}
+      <tr><td class="ps-4"><div class="d-flex align-items-center gap-2"><img src="{{ e.student.user.avatar }}" class="avatar-sm">{{ e.student.user.display_name }}</div></td>
+        <td class="small">{{ e.student.roll_no }}</td>
+        <td class="text-end pe-4">
+          {% with cur=existing|get_item:e.id %}
+          <div class="btn-group" role="group">
+            <input type="radio" class="btn-check" name="status_{{ e.id }}" id="p{{ e.id }}" value="P" {% if cur == 'P' or not cur %}checked{% endif %}>
+            <label class="btn btn-sm btn-outline-success" for="p{{ e.id }}">Present</label>
+            <input type="radio" class="btn-check" name="status_{{ e.id }}" id="l{{ e.id }}" value="L" {% if cur == 'L' %}checked{% endif %}>
+            <label class="btn btn-sm btn-outline-warning" for="l{{ e.id }}">Late</label>
+            <input type="radio" class="btn-check" name="status_{{ e.id }}" id="a{{ e.id }}" value="A" {% if cur == 'A' %}checked{% endif %}>
+            <label class="btn btn-sm btn-outline-danger" for="a{{ e.id }}">Absent</label>
+          </div>
+          {% endwith %}
+        </td></tr>
+    {% empty %}<tr><td colspan="3" class="text-muted p-3 text-center">No active students.</td></tr>{% endfor %}</tbody></table></div>
+  <div class="card-body text-end"><button class="btn btn-primary rounded-pill px-4"><i class="fa-solid fa-floppy-disk me-1"></i>Save Attendance</button></div>
+</div></form>
+{% endblock %}

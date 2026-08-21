@@ -1,0 +1,170 @@
+{% extends 'base_public.html' %}
+{% load humanize %}
+{% block title %}University Management System · Home{% endblock %}
+{% block content %}
+
+<!-- HERO -->
+<section class="pub-hero">
+  <div class="container">
+    <div class="welcome">Welcome To UMS</div>
+    <h1>University<br>
+      <span class="bold"><span class="cap"><i class="fa-solid fa-graduation-cap"></i></span>Management</span>
+    </h1>
+    <p class="lead-sub">One smart platform to run admissions, academics, attendance, exams,
+      fees and campus life — with role-based portals and built-in AI insights.</p>
+    <a href="{% if user.is_authenticated %}{% url 'university:dashboard' %}{% else %}{% url 'accounts:signup' %}{% endif %}" class="hero-btn">
+      Get Started <i class="fa-solid fa-arrow-right-long"></i></a>
+  </div>
+</section>
+
+<!-- HERO PORTAL CARDS -->
+<section class="container pub-cards">
+  <div class="row g-4">
+    <div class="col-md-4">
+      <a href="{% url 'accounts:login' %}" class="text-decoration-none">
+      <div class="portal-card">
+        <div class="pc-head"><span class="pc-icon"><i class="fa-solid fa-user-graduate"></i></span>
+          <h5>Student Portal</h5></div>
+        <p>Track attendance, results and fees, submit assignments and get AI-powered study recommendations.</p>
+        <span class="pc-chevron"><i class="fa-solid fa-chevron-down"></i></span>
+      </div></a>
+    </div>
+    <div class="col-md-4">
+      <a href="{% url 'accounts:login' %}" class="text-decoration-none">
+      <div class="portal-card">
+        <div class="pc-head"><span class="pc-icon"><i class="fa-solid fa-chalkboard-user"></i></span>
+          <h5>Faculty Portal</h5></div>
+        <p>Take day-wise attendance, publish and grade assignments, and monitor class performance at a glance.</p>
+        <span class="pc-chevron"><i class="fa-solid fa-chevron-down"></i></span>
+      </div></a>
+    </div>
+    <div class="col-md-4">
+      <a href="{% url 'accounts:login' %}" class="text-decoration-none">
+      <div class="portal-card">
+        <div class="pc-head"><span class="pc-icon"><i class="fa-solid fa-user-shield"></i></span>
+          <h5>Administration</h5></div>
+        <p>Full control over students, faculty, courses, departments and fees with live campus-wide analytics.</p>
+        <span class="pc-chevron"><i class="fa-solid fa-chevron-down"></i></span>
+      </div></a>
+    </div>
+  </div>
+</section>
+
+<!-- STATS -->
+<section class="container pt-5" style="position:relative;z-index:5">
+  <div class="row g-3">
+    {% with s=stats %}
+    <div class="col-6 col-lg-3"><div class="card stat-tile" style="background:linear-gradient(135deg,#7b6cf6,#5a4bd6)">
+      <div class="lbl">Students</div><div class="val">{{ s.students|intcomma }}+</div>
+      <i class="fa-solid fa-users ghost"></i></div></div>
+    <div class="col-6 col-lg-3"><div class="card stat-tile" style="background:linear-gradient(135deg,#20c997,#12b886)">
+      <div class="lbl">Faculty</div><div class="val">{{ s.faculty|intcomma }}+</div>
+      <i class="fa-solid fa-chalkboard-user ghost"></i></div></div>
+    <div class="col-6 col-lg-3"><div class="card stat-tile" style="background:linear-gradient(135deg,#f368a6,#e6488a)">
+      <div class="lbl">Courses</div><div class="val">{{ s.courses|intcomma }}+</div>
+      <i class="fa-solid fa-book ghost"></i></div></div>
+    <div class="col-6 col-lg-3"><div class="card stat-tile" style="background:linear-gradient(135deg,#4dabf7,#3b9ae1)">
+      <div class="lbl">Departments</div><div class="val">{{ s.departments|intcomma }}+</div>
+      <i class="fa-solid fa-building-columns ghost"></i></div></div>
+    {% endwith %}
+  </div>
+</section>
+
+<!-- FEATURES -->
+<section class="container py-5 mt-4">
+  <div class="text-center mb-5">
+    <span class="badge-soft badge rounded-pill px-3 py-2">Everything you need</span>
+    <h2 class="fw-bold mt-2">One platform, three tailored experiences</h2>
+    <p class="text-muted">Each role gets a dedicated, colour-themed portal designed around their daily work.</p>
+  </div>
+  <div class="row g-4">
+    {% for f in "x"|make_list %}{% endfor %}
+    <div class="col-md-4">
+      <div class="card feature-card card-ums h-100 p-4">
+        <span class="icon-circle mb-3" style="background:linear-gradient(135deg,#6C5CE7,#8f7bff)"><i class="fa-solid fa-user-shield"></i></span>
+        <h5 class="fw-bold">Administrator</h5>
+        <p class="text-muted small">Manage students, faculty, departments, courses and fees. Live analytics,
+          fee collection charts and at-risk detection at a glance.</p>
+        <ul class="small text-muted"><li>Enrollment & department analytics</li><li>Fee collection tracking</li><li>Campus-wide notices</li></ul>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="card feature-card card-ums h-100 p-4">
+        <span class="icon-circle mb-3" style="background:linear-gradient(135deg,#009688,#26c6a6)"><i class="fa-solid fa-chalkboard-user"></i></span>
+        <h5 class="fw-bold">Faculty</h5>
+        <p class="text-muted small">Take attendance, publish assignments, grade submissions and monitor class
+          performance with grade-distribution charts.</p>
+        <ul class="small text-muted"><li>One-click attendance</li><li>Assignment grading</li><li>Class insights</li></ul>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="card feature-card card-ums h-100 p-4">
+        <span class="icon-circle mb-3" style="background:linear-gradient(135deg,#0984e3,#48b1f3)"><i class="fa-solid fa-user-graduate"></i></span>
+        <h5 class="fw-bold">Student</h5>
+        <p class="text-muted small">Track attendance, results and fees, submit assignments, and get AI study
+          recommendations and grade predictions.</p>
+        <ul class="small text-muted"><li>Attendance & GPA tracking</li><li>Assignment submissions</li><li>AI recommendations</li></ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- DEPARTMENTS -->
+<section class="container py-5">
+  <div class="d-flex justify-content-between align-items-end mb-4">
+    <div><span class="badge-soft badge rounded-pill px-3 py-2">Explore</span>
+      <h2 class="fw-bold mt-2 mb-0">Popular Departments</h2></div>
+    <a href="{% url 'university:about' %}" class="btn btn-sm btn-outline-primary rounded-pill">View all <i class="fa-solid fa-arrow-right ms-1"></i></a>
+  </div>
+  <div class="row g-4">
+    {% for d in departments %}
+    <div class="col-6 col-md-4 col-lg-2">
+      <div class="card course-card card-ums h-100 text-center p-3">
+        <span class="icon-circle mx-auto mb-2" style="background:{{ d.color }}"><i class="fa-solid {{ d.icon }}"></i></span>
+        <div class="fw-semibold small">{{ d.name }}</div>
+        <div class="text-muted" style="font-size:.72rem">{{ d.code }}</div>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+</section>
+
+<!-- FEATURED COURSES -->
+<section class="container py-5">
+  <div class="text-center mb-5">
+    <span class="badge-soft badge rounded-pill px-3 py-2">Catalog</span>
+    <h2 class="fw-bold mt-2">Featured Courses</h2>
+  </div>
+  <div class="row g-4">
+    {% for c in featured_courses %}
+    <div class="col-md-6 col-lg-4">
+      <div class="card course-card card-ums h-100 overflow-hidden">
+        <img src="{{ c.image_url|default:'' }}" class="w-100" style="height:170px;object-fit:cover"
+             onerror="this.src='https://picsum.photos/seed/c{{ c.id }}/600/400'" alt="{{ c.title }}">
+        <div class="card-body">
+          <span class="badge rounded-pill" style="background:{{ c.department.color }}">{{ c.department.code }}</span>
+          <h6 class="fw-bold mt-2">{{ c.title }}</h6>
+          <p class="text-muted small mb-2">{{ c.description|truncatewords:14 }}</p>
+          <div class="d-flex justify-content-between align-items-center small text-muted">
+            <span><i class="fa-solid fa-star text-warning"></i> {{ c.credits }} credits</span>
+            <span><i class="fa-solid fa-users me-1"></i>{{ c.enrolled_count }} enrolled</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="container py-5">
+  <div class="card border-0 rounded-4 text-white p-5 text-center" style="background:var(--gradient)">
+    <h2 class="fw-bold">Ready to modernise your campus?</h2>
+    <p class="opacity-75 mb-4">Join thousands of students and faculty already using UMS every day.</p>
+    <div class="d-flex justify-content-center gap-3">
+      <a href="{% url 'accounts:signup' %}" class="btn btn-light btn-lg rounded-pill px-4 fw-semibold text-primary">Create free account</a>
+      <a href="{% url 'university:contact' %}" class="btn btn-outline-light btn-lg rounded-pill px-4">Talk to us</a>
+    </div>
+  </div>
+</section>
+{% endblock %}

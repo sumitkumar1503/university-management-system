@@ -1,0 +1,22 @@
+{% extends 'base_dashboard.html' %}
+{% block title %}Grade · {{ assignment.title }}{% endblock %}
+{% block content %}
+<div class="page-head">
+  <div><h4><i class="fa-solid fa-pen-clip me-2" style="color:var(--primary)"></i>Grade Submissions</h4>
+    <small class="text-muted">{{ assignment.title }} · {{ assignment.course.code }} · max {{ assignment.max_marks }}</small></div>
+  <a href="{% url 'university:faculty_courses' %}" class="btn btn-sm btn-outline-primary rounded-pill"><i class="fa-solid fa-arrow-left me-1"></i>Back</a>
+</div>
+<form method="post"><div class="card card-ums">
+  {% csrf_token %}
+  <div class="table-responsive"><table class="table align-middle mb-0">
+    <thead><tr><th class="ps-4">Student</th><th>Submission</th><th>Status</th><th style="width:110px">Marks</th><th style="width:220px">Feedback</th></tr></thead>
+    <tbody>{% for s in subs %}
+      <tr><td class="ps-4"><div class="d-flex align-items-center gap-2"><img src="{{ s.student.user.avatar }}" class="avatar-sm">{{ s.student.user.display_name }}</div></td>
+        <td class="small text-muted" style="max-width:260px">{{ s.content|truncatewords:20|default:"—" }}</td>
+        <td><span class="status {{ s.status }}">{{ s.get_status_display }}</span></td>
+        <td><input name="marks_{{ s.id }}" type="number" value="{{ s.marks|default:'' }}" max="{{ assignment.max_marks }}" class="form-control form-control-sm"></td>
+        <td><input name="feedback_{{ s.id }}" value="{{ s.feedback }}" class="form-control form-control-sm" placeholder="Feedback"></td></tr>
+    {% empty %}<tr><td colspan="5" class="text-muted p-3 text-center">No submissions.</td></tr>{% endfor %}</tbody></table></div>
+  <div class="card-body text-end"><button class="btn btn-primary rounded-pill px-4"><i class="fa-solid fa-floppy-disk me-1"></i>Save Grades</button></div>
+</div></form>
+{% endblock %}
